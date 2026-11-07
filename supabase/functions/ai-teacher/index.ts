@@ -51,17 +51,13 @@ Deno.serve(async (req: Request) => {
   try { body = await req.json(); } catch { return json(req, { error: "Hibás kérés." }, 400); }
   const message = typeof body.message === "string" ? body.message.trim() : "";
   if (!message || message.length > 1500) return json(req, { error: "Írj legfeljebb 1500 karakteres kérdést." }, 400);
-  // No global API credit sharing. Only explicitly entitled users can call the model.
-  // A ChatGPT login alone is NOT authorization to use another user's budget.
-  const { data: access, error: accessError } = await sb.from("ai_teacher_access")
-    .select("enabled,billing_mode").eq("user_id", identity.user.id).maybeSingle();
-  if (accessError) return json(req, { error: "Nem sikerült ellenőrizni az AI-hozzáférést." }, 503);
-  if (!access?.enabled) return json(req, {
-    error: "Az AI-tanár ehhez a fiókhoz még nincs összekapcsolva. Az ingyenes gyakorlófeladatok továbbra is elérhetők."
-  }, 403);
-  if (access.billing_mode !== "owner_api") return json(req, {
-    error: "A saját AI-fiókos kapcsolat előkészítés alatt áll."
-  }, 503);
+  // This endpoint NEVER bills a shared server OpenAI API key.
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!serviceKey) return json(req, { error: "A személyes API-kulcs tárolása még nincs konfigurálva." }, 503);
+  const admin = createClient(url, serviceKey, { auth: { persistSession: false, autoRefreshToken: false } });
+  const { data: personalKey, error: personalKeyError } = await admin.rpc("ai_key_get", { p_user: identity.user.id });
+  if (personalKeyError) return json(req, { error: "Nem sikerült ellenőrizni a személyes AI-kulcsot." }, 503);
+  if (!personalKey) return json(req, { error: "Az AI-tanárhoz előbb kapcsolódj a saját OpenAI API-kulcsoddal." }, 403);
   const topic = "Ohm-törvény";
   const [historyResult, resultsResult] = await Promise.all([
     sb.from("teacher_messages").select("role,content,created_at").eq("user_id", identity.user.id)
@@ -81,8 +77,6 @@ Deno.serve(async (req: Request) => {
   if (latest?.role === "user" && latest.content === message)
     return json(req, { error: "Az előző üzenet feldolgozása még tart vagy már elküldted." }, 409);
 
-  const openaiKey = Deno.env.get("OPENAI_API_KEY");
-  if (!openaiKey) return json(req, { error: "Az AI-tanár még nincs aktiválva: hiányzik a szerveroldali OpenAI API-kulcs." }, 503);
   const input = [
     { role: "developer", content: INSTRUCTIONS },
     { role: "developer", content: "Korábbi nyitott számítások: " + answered + ", helyes: " + correct + ". Utolsó eredmények: " + JSON.stringify(recent.slice(0, 12)) },
@@ -93,7 +87,7 @@ Deno.serve(async (req: Request) => {
   try {
     ai = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
-      headers: { Authorization: "Bearer " + openaiKey, "Content-Type": "application/json" },
+      headers: { Authorization: "Bearer " + personalKey, "Content-Type": "application/json" },
       body: JSON.stringify({
         model: Deno.env.get("OPENAI_MODEL") || "gpt-4.1-mini",
         input,
@@ -115,10 +109,28 @@ Deno.serve(async (req: Request) => {
     .filter((c: {type?: string}) => c.type === "output_text")
     .map((c: {text?: string}) => c.text ?? "").join("\n").trim();
   if (!answer) return json(req, { error: "Az AI-tanár most nem adott értelmezhető választ." }, 502);
+  // Track actual API-reported usage, not estimated message length.
+  const usage = output.usage;
+  const usageRecord = {
+    user_id: identity.user.id,
+    provider: "openai",
+    model: String(output.model || Deno.env.get("OPENAI_MODEL") || "gpt-4.1-mini"),
+    response_id: typeof output.id === "string" ? output.id : null,
+    input_tokens: Math.max(0, Number(usage?.input_tokens || 0)),
+    output_tokens: Math.max(0, Number(usage?.output_tokens || 0)),
+    total_tokens: Math.max(0, Number(usage?.total_tokens || 0)),
+  };
+  if (usage && Number.isSafeInteger(usageRecord.input_tokens) &&
+      Number.isSafeInteger(usageRecord.output_tokens) &&
+      Number.isSafeInteger(usageRecord.total_tokens)) {
+    const {error: ledgerError} = await admin.from("ai_usage_events").insert(usageRecord);
+    if (ledgerError) console.error("Could not record AI token usage:", ledgerError.code);
+  }
+
   const { error: saveError } = await sb.from("teacher_messages").insert([
     { user_id: identity.user.id, role: "user", content: message, topic },
     { user_id: identity.user.id, role: "assistant", content: answer.slice(0, 12000), topic },
   ]);
   if (saveError) return json(req, { error: "A beszélgetést nem sikerült elmenteni." }, 500);
-  return json(req, { answer, topic, answered, correct });
+  return json(req, { answer, topic, answered, correct, usage: output.usage ? {input_tokens: output.usage.input_tokens, output_tokens: output.usage.output_tokens, total_tokens: output.usage.total_tokens} : null });
 });
