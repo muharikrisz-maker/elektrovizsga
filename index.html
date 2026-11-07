@@ -49,6 +49,7 @@ header:after{content:"";position:absolute;left:0;right:0;top:0;height:7px;backgr
 </style></head><body><main><header><div class="brand">⚡ Elektro<span>Vizsga</span></div><div class="tag">DEMO • 1.0</div></header><div id="app"></div><footer>Gyakorlóalkalmazás, nem hivatalos vizsgafelület. A mintakérdések saját szerkesztésűek, nem OSZTV-feladatok.</footer></main>
 <script src="questions-extra.js"></script>
 <script src="questions-practical.js"></script>
+<script src="questions-oktav.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="auth-config.js"></script>
 <script src="auth.js"></script>
@@ -67,7 +68,7 @@ const BANK=[
 {id:"b3",topic:"Villamos biztonságtechnika",q:"Melyik jelölés utal a védővezetőre villamos rajzon?",opts:["N","L1","PE","PEN kizárólag"],a:2,why:"A PE a védővezető; a PEN egyesített védő- és nullavezető."},
 {id:"b4",topic:"Villamos biztonságtechnika",q:"Melyik eszköz alkalmas önmagában túláram elleni védelemre megfelelő méretezés esetén?",opts:["ÁVK túláramvédelem nélkül","Kismegszakító","Egyszerű kapcsoló","Jelzőlámpa"],a:1,why:"A kismegszakító túlterhelés és zárlati túláram ellen is véd; a szokásos ÁVK önmagában nem túláramvédelmi eszköz."}
 ];
-BANK.push(...EXTRA_BANK,...PRACTICAL_BANK);
+BANK.push(...EXTRA_BANK,...PRACTICAL_BANK,...OKTAV_BANK);
 const app=document.getElementById("app");
 let state={mode:"home",order:[],cursor:0,answers:{},skipped:[],second:false,deadline:0,timer:null,topic:"Összes témakör"};
 const escaped=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -125,9 +126,9 @@ function skip(id){if(state.second)return;state.skipped.push(id);state.cursor++;r
 
 
 const STUDY_LEVELS=[
- {name:"Kezdő",description:"Alapfogalmak és gyors sikerélmények",ids:["n1","n2","n3","g1","g3","b1","b3","os02","os05","os06","os13","os14","os18","p01","p02","p03","p11"]},
- {name:"Középhaladó",description:"Összefüggések és egylépéses számítások",ids:["g2","b2","b4","os01","os07","os09","os10","os11","os15","fz02","fz04","fz08","fz09","p04","p05","p06","p07"]},
- {name:"Haladó",description:"Többlépéses számítások és vizsgafeladatok",ids:["fz01","fz03","fz05","fz06","fz07","os03","os04","os08","os12","os16","os17","p08","p09","p10","p12"]}
+ {name:"Kezdő",description:"Alapfogalmak és gyors sikerélmények",ids:["n1","n2","n3","g1","g3","b1","b3","os02","os05","os06","os13","os14","os18","p01","p02","p03","p11","o01","o02","o03","o04","o05","o06","o16"]},
+ {name:"Középhaladó",description:"Összefüggések és egylépéses számítások",ids:["g2","b2","b4","os01","os07","os09","os10","os11","os15","fz02","fz04","fz08","fz09","p04","p05","p06","p07","o07","o08","o09","o10","o11","o12","o13","o15","o17","o18","o20"]},
+ {name:"Haladó",description:"Többlépéses számítások és vizsgafeladatok",ids:["fz01","fz03","fz05","fz06","fz07","os03","os04","os08","os12","os16","os17","p08","p09","p10","p12","o14","o19","o21","o22","o23","o24"]}
 ];
 let study=null;
 function studyPool(level,topic){return shuffled(BANK.filter(q=>STUDY_LEVELS[level].ids.includes(q.id)&&(topic==="Összes témakör"||topic===q.topic)))}
