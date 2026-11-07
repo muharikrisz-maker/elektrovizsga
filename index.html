@@ -95,10 +95,11 @@ async function showOhmPractice(){
      e.preventDefault();
      const input=document.getElementById("ohmAnswer").value.trim().replace(/\s/g,"").replace(",",".");
      if(!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$/.test(input)){document.getElementById("ohmFeedback").textContent="Írj be egy számot, mértékegység nélkül.";return}
-     const val=Number(input), correct=Math.abs(val-q.answer)<=Math.max(.011,Math.abs(q.answer)*.001);
+     const val=Number(input);
      const submit=document.getElementById("ohmSubmit");submit.disabled=true;
      try{
-       await window.ElektroGenerator.submit(q,correct?q.a:-1);
+       const result=await window.ElektroGenerator.submit(q,input);
+       const correct=result.correct;
        if(state.mode!=="ohm-practice"||ohmCurrent?.id!==q.id)return;
        const shownAnswer=document.getElementById("ohmAnswer").value;document.getElementById("ohmForm").remove();
        document.getElementById("ohmFeedback").innerHTML='<div class="study-feedback"><h2 class="'+(correct?"good":"bad")+'">'+(correct?"Helyes!":"Ezt még gyakoroljuk.")+'</h2><p>Válaszod: '+escaped(shownAnswer)+' '+escaped(q.unit)+'</p><p><strong>Helyes eredmény: '+escaped(new Intl.NumberFormat("hu-HU",{maximumFractionDigits:2}).format(q.answer))+' '+escaped(q.unit)+'</strong></p><p>'+escaped(q.why)+'</p><button class="button" id="nextOhm">Következő, új feladat</button></div>';
