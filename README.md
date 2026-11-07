@@ -42,3 +42,7 @@ A 2024-es archívumi feladatsor elemzett témái: villamos szerelési rajzok, mo
 
 ## Fejlesztés
 A `main` ágon lévő `index.html` a GitHub Pages belépési pontja; a `questions-extra.js` az új kérdésbank. Éles használat előtt a kérdéseket szakmai felülvizsgálattal ajánlott ellenőrizni.
+
+## Tananyag-követelmény új kérdésekhez
+
+A kérdésbank minden eleméhez kötelező: `why` (a konkrét válasz levezetése), valamint a `teaching-materials.js` fájlban `intro` (rövid fogalmi bevezetés), `hint` (megoldás előtti segítség), `worked` (más számokkal készített, az adott kérdéshez kapcsolódó kidolgozott példa) és `real` (valós felhasználás). A tanulásban a feladathoz rendelt saját példát használjuk; nem veszünk elő más témájú tanítócsomagot. A kötelező mezők nélküli kérdést a kliens kihagyja és konzolhibát jelez. Új kérdés hozzáadásakor mind az öt részt ki kell dolgozni és ellenőrizni.
