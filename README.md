@@ -9,7 +9,8 @@ https://muharikrisz-maker.github.io/elektrovizsga/
 - 10 alapozó mintakérdés
 - 18 új, önállóan megfogalmazott kérdés a 2024-es OSZTV feladattípusai alapján
 - 9 új kérdés a tanulói füzetben szereplő transzformátor- és zárlatszámítás témákból
-- Összesen: **37 kérdés**
+- 12 új, hétköznapi, villanyszerelési és ipari szituációra épülő feladat, három nehézségi szinten
+- Összesen: **49 kérdés**
 
 A 2024-es archívumi feladatsor elemzett témái: villamos szerelési rajzok, motorvezérlés, védelmi eszközök, szigetelésmérés, védővezető, hurokimpedancia, transzformátor, villamos teljesítmények. Az oldalra feltöltött kérdések **nem szó szerinti OSZTV-kérdések**, hanem saját készítésű gyakorlófeladatok. A források tartalmi ellenőrzése és több év anyagának feldolgozása folytatandó. 
 
@@ -17,6 +18,13 @@ A 2024-es archívumi feladatsor elemzett témái: villamos szerelési rajzok, mo
 - [Szakma Sztár – hivatalos feladatarchívum](https://szakmasztar.hu/szakmai-versenyek/feladatok)
 - [2024-es erősáramú elektrotechnikus OSZTV feladatsor (PDF)](https://s3-eu-west-1.amazonaws.com/szakmavilag/osztv-szktv/2024/Erosaramu-elektrotechnikus_Feladatsor_2024.pdf)
 - Saját, kézzel írott jegyzet 2026. november 7-i fotója: 10/0,4 kV, két 2 MVA-es transzformátor, 5% rövidzárási feszültség, zárlati áram, lökőáram, 5 km kábel, 60 MVA hálózati zárlati teljesítmény. Bizonytalan kézírásos adatokból nem állítunk elő hitelesített numerikus feladatot.
+
+## Gyakorlati tanulási módszer
+- Az új gyakorlati feladatok rövid, életszerű bevezetést és külön megnyitható, a megoldást nem eláruló segítséget adnak.
+- Válaszadás után számítási levezetés és „Hol veszed hasznát a hétköznapokban?” magyarázat jelenik meg.
+- A kezdő, középhaladó és haladó szinten is elérhető új kérdések, a fokozatos tanulási út és a próbavizsga is használja őket.
+- A–B–C–D lehetőségek minden új körben keverednek, az értékelés az eredeti helyes válaszra épül.
+- A vezeték- és védelmi példák oktatási célúak, nem helyettesítik a helyszíni méretezést és a szabvány szerinti ellenőrzést.
 
 ## Vizsgamód
 - 45 perces időkeret
