@@ -51,6 +51,17 @@ Deno.serve(async (req: Request) => {
   try { body = await req.json(); } catch { return json(req, { error: "Hibás kérés." }, 400); }
   const message = typeof body.message === "string" ? body.message.trim() : "";
   if (!message || message.length > 1500) return json(req, { error: "Írj legfeljebb 1500 karakteres kérdést." }, 400);
+  // No global API credit sharing. Only explicitly entitled users can call the model.
+  // A ChatGPT login alone is NOT authorization to use another user's budget.
+  const { data: access, error: accessError } = await sb.from("ai_teacher_access")
+    .select("enabled,billing_mode").eq("user_id", identity.user.id).maybeSingle();
+  if (accessError) return json(req, { error: "Nem sikerült ellenőrizni az AI-hozzáférést." }, 503);
+  if (!access?.enabled) return json(req, {
+    error: "Az AI-tanár ehhez a fiókhoz még nincs összekapcsolva. Az ingyenes gyakorlófeladatok továbbra is elérhetők."
+  }, 403);
+  if (access.billing_mode !== "owner_api") return json(req, {
+    error: "A saját AI-fiókos kapcsolat előkészítés alatt áll."
+  }, 503);
   const topic = "Ohm-törvény";
   const [historyResult, resultsResult] = await Promise.all([
     sb.from("teacher_messages").select("role,content,created_at").eq("user_id", identity.user.id)
