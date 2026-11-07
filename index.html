@@ -152,7 +152,7 @@ async function showAiTeacher(){
    document.getElementById("teacherBack").onclick=studyHome;
    return;
  }
- app.innerHTML='<section class="panel"><span class="pill">Tanulószoba · személyes AI-tanár</span><h1>Ohm-törvény · magánóra</h1><p class="muted">Kérdezz, számolj és indokold meg a válaszaidat! A tanár figyelembe veszi a korábbi feladataid eredményeit. A segítséggel megoldott feladat nem azonos az önállóan megoldottal.</p><p id="teacherUsage" class="muted small">Utolsó 7 nap tokenhasználata: betöltés…</p><div id="teacherHistory" aria-live="polite" style="display:flex;flex-direction:column;gap:12px;margin:20px 0"></div><p class="muted small" id="teacherStatus" role="status">Korábbi beszélgetés betöltése…</p><form id="teacherForm"><label for="teacherMessage">Üzeneted vagy számításod</label><textarea id="teacherMessage" rows="3" maxlength="1500" class="auth-input" style="max-width:100%;resize:vertical" placeholder="Például: Magyarázd el az Ohm-törvényt egy hétköznapi példával!" required></textarea><div class="actions"><button class="button" type="submit" id="teacherSend">Küldés</button><button class="button secondary" type="button" id="teacherBack">Vissza</button></div></form></section>';
+ app.innerHTML='<section class="panel"><span class="pill">Tanulószoba · személyes AI-tanár</span><h1>Ohm-törvény · magánóra</h1><p class="muted">Kérdezz, számolj és indokold meg a válaszaidat! A tanár figyelembe veszi a korábbi feladataid eredményeit. A segítséggel megoldott feladat nem azonos az önállóan megoldottal.</p><p id="teacherUsage" class="muted small">Utolsó 7 nap tokenhasználata: betöltés…</p><div id="teacherKeyPanel" class="lesson-example"><h2>Saját AI-kapcsolat</h2><p id="teacherKeyStatus" class="muted small">API-kulcs állapotának ellenőrzése…</p><form id="teacherKeyForm" autocomplete="off"><label for="teacherApiKey">Saját OpenAI API-kulcs</label><input id="teacherApiKey" class="auth-input" type="password" autocomplete="new-password" spellcheck="false" placeholder="sk-…" minlength="20" required><p class="muted small">A kulcsot csak a védett szervernek továbbítjuk; nem kerül a GitHubra vagy a beszélgetésbe.</p><div class="actions"><button class="button secondary" id="teacherKeySave" type="submit">Saját kulcs biztonságos csatlakoztatása</button><button class="button secondary" id="teacherKeyDisconnect" type="button" hidden>Kulcs leválasztása</button></div></form></div><div id="teacherHistory" aria-live="polite" style="display:flex;flex-direction:column;gap:12px;margin:20px 0"></div><p class="muted small" id="teacherStatus" role="status">Korábbi beszélgetés betöltése…</p><form id="teacherForm"><label for="teacherMessage">Üzeneted vagy számításod</label><textarea id="teacherMessage" rows="3" maxlength="1500" class="auth-input" style="max-width:100%;resize:vertical" placeholder="Például: Magyarázd el az Ohm-törvényt egy hétköznapi példával!" required></textarea><div class="actions"><button class="button" type="submit" id="teacherSend">Küldés</button><button class="button secondary" type="button" id="teacherBack">Vissza</button></div></form></section>';
  document.getElementById("teacherBack").onclick=studyHome;
  async function refreshTeacherUsage(){
    const usageEl=document.getElementById("teacherUsage");
@@ -169,6 +169,50 @@ async function showAiTeacher(){
    usageEl.textContent="Utolsó 7 nap · "+(data||[]).length+" AI-válasz · bemenet: "+fmt(input)+" token · kimenet: "+fmt(output)+" token · összesen: "+fmt(total)+" token.";
  }
  refreshTeacherUsage().catch(()=>{if(state.mode==="ai-teacher")document.getElementById("teacherUsage").textContent="A tokenstatisztika most nem érhető el."});
+
+ const keyStatus=document.getElementById("teacherKeyStatus");
+ const keyForm=document.getElementById("teacherKeyForm");
+ const keyInput=document.getElementById("teacherApiKey");
+ const keySave=document.getElementById("teacherKeySave");
+ const keyDisconnect=document.getElementById("teacherKeyDisconnect");
+ async function teacherKeyRequest(action,key){
+   const {data,error}=await window.ElektroAuth.getClient().functions.invoke("ai-key-settings",{body:{action,...(key?{key}:{})}});
+   if(error){
+     let detail=error.message;
+     try{const response=await error.context?.json();if(response?.error)detail=response.error}catch{}
+     throw Error(detail);
+   }
+   if(data?.error)throw Error(data.error);
+   return data;
+ }
+ function setKeyState(connected){
+   if(state.mode!=="ai-teacher")return;
+   keyStatus.textContent=connected?"Saját API-kulcsod csatlakoztatva. Az AI-hívásokat a saját OpenAI-fiókod fizeti.":"Még nincs saját API-kulcsod csatlakoztatva. Az AI-tanár addig nem indítható.";
+   keyDisconnect.hidden=!connected;
+   keyInput.placeholder=connected?"Új kulcs hozzáadásával lecserélheted a meglévőt.":"sk-…";
+ }
+ teacherKeyRequest("status").then(r=>setKeyState(Boolean(r.connected))).catch(e=>{if(state.mode==="ai-teacher")keyStatus.textContent="Kulcsállapot ellenőrzése sikertelen: "+e.message});
+ keyForm.onsubmit=async ev=>{
+   ev.preventDefault();
+   const key=keyInput.value.trim();
+   if(!key)return;
+   keySave.disabled=true;keyDisconnect.disabled=true;
+   keyStatus.textContent="Kulcs ellenőrzése és titkosított mentése…";
+   try{
+     const result=await teacherKeyRequest("connect",key);
+     keyInput.value="";
+     setKeyState(Boolean(result.connected));
+   }catch(e){keyStatus.textContent="Nem sikerült hozzáadni: "+e.message}
+   finally{keyInput.value="";keySave.disabled=false;keyDisconnect.disabled=false}
+ };
+ keyDisconnect.onclick=async()=>{
+   if(!confirm("Biztosan leválasztod a saját API-kulcsodat?"))return;
+   keySave.disabled=true;keyDisconnect.disabled=true;
+   keyStatus.textContent="API-kulcs leválasztása…";
+   try{const r=await teacherKeyRequest("disconnect");setKeyState(Boolean(r.connected))}
+   catch(e){keyStatus.textContent="Nem sikerült leválasztani: "+e.message}
+   finally{keySave.disabled=false;keyDisconnect.disabled=false}
+ };
  const historyEl=document.getElementById("teacherHistory");
  const status=document.getElementById("teacherStatus");
  function bubble(role,content){
