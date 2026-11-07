@@ -269,7 +269,7 @@ function renderStudy(){
  const answered=Object.prototype.hasOwnProperty.call(study.answers,q.id);
  const correct=study.answers[q.id]===q.a;
  const l=lessons[lessonKey(q)];
- app.innerHTML='<section class="panel"><div class="stats"><div class="stat"><span class="muted small">Tanulás · '+escaped(STUDY_LEVELS[studyLevelOf(q)].name)+'</span><strong>'+(study.cursor+1)+' / '+study.questions.length+'</strong></div><div class="stat"><span class="muted small">Időkorlát</span><strong>Nincs</strong></div></div><div class="progress"><div style="width:'+Math.round(study.cursor/study.questions.length*100)+'%"></div></div><span class="pill">'+escaped(q.topic)+'</span><h2>'+escaped(q.q)+'</h2><div id="studyOptions">'+q.opts.map((o,i)=>'<button class="option '+(answered&&i===q.a?'study-correct':answered&&i===study.answers[q.id]&&!correct?'study-wrong':'')+'" data-study-answer="'+i+'" '+(answered?'disabled':'')+'><strong>'+String.fromCharCode(65+i)+'</strong><span>'+escaped(o)+'</span></button>').join('')+'</div>'+(answered?'<section class="study-feedback"><h2>'+(correct?'✓ Helyes!':'Nézzük meg együtt!')+'</h2><p>'+escaped(q.why)+'</p><h3>Hol használjuk a valóságban?</h3><p>'+escaped(l.real)+'</p><details><summary>Kidolgozott példa és további magyarázat</summary><p>'+escaped(l.intro)+'</p><p>'+escaped(l.worked)+'</p></details><div class="actions"><button class="button" id="studyNext">'+(study.cursor===study.questions.length-1?'Eredmény megtekintése':'Következő kérdés')+'</button></div></section>':'<p class="muted small">Válassz egy választ; utána azonnal elmagyarázzuk a megoldást.</p>')+'<div class="actions"><button class="button secondary" id="studyLeave">Gyakorlás megszakítása</button></div></section>';
+ app.innerHTML='<section class="panel"><div class="stats"><div class="stat"><span class="muted small">Tanulás · '+escaped(STUDY_LEVELS[studyLevelOf(q)].name)+'</span><strong>'+(study.cursor+1)+' / '+study.questions.length+'</strong></div><div class="stat"><span class="muted small">Időkorlát</span><strong>Nincs</strong></div></div><div class="progress"><div style="width:'+Math.round(study.cursor/study.questions.length*100)+'%"></div></div><span class="pill">'+escaped(q.topic)+'</span><h2>'+escaped(q.q)+'</h2><div id="studyOptions">'+q.opts.map((o,i)=>'<button class="option '+(answered&&i===q.a?'study-correct':answered&&i===study.answers[q.id]&&!correct?'study-wrong':'')+'" data-study-answer="'+i+'" '+(answered?'disabled':'')+'><strong>'+String.fromCharCode(65+i)+'</strong><span>'+escaped(o)+'</span></button>').join('')+'</div>'+(answered?'<section class="study-feedback"><h2>'+(correct?'✓ Helyes!':'Nézzük meg együtt!')+'</h2><p>'+escaped(q.why)+'</p>'+studyConceptHtml(q)+'<h3>Hol használjuk a valóságban?</h3><p>'+escaped(l.real)+'</p><details><summary>Kidolgozott példa és további magyarázat</summary><p>'+escaped(l.intro)+'</p><p>'+escaped(l.worked)+'</p></details><div class="actions"><button class="button" id="studyNext">'+(study.cursor===study.questions.length-1?'Eredmény megtekintése':'Következő kérdés')+'</button></div></section>':'<p class="muted small">Válassz egy választ; utána azonnal elmagyarázzuk a megoldást.</p>')+'<div class="actions"><button class="button secondary" id="studyLeave">Gyakorlás megszakítása</button></div></section>';
  document.querySelectorAll("[data-study-answer]").forEach(b=>b.onclick=()=>{if(!Object.prototype.hasOwnProperty.call(study.answers,q.id)){study.answers[q.id]=Number(b.dataset.studyAnswer);renderStudy()}});
  if(answered)document.getElementById("studyNext").onclick=()=>{study.cursor++;renderStudy()};
  document.getElementById("studyLeave").onclick=()=>{if(confirm("Biztosan megszakítod a gyakorlást?"))studyHome()};
@@ -289,6 +289,25 @@ function finishStudy(){
  if(window.ElektroAuth?.getUser())window.ElektroAuth.saveAttempt({score,total:selected.length,topic:"Tanulás: "+(study.mode==="path"?"Fokozatos":STUDY_LEVELS[study.level].name)+" / "+study.topic,answers:{...study.answers}}).then(()=>{const el=document.getElementById("studySaveStatus");if(el)el.textContent="A tanulási kör mentve a fiókodba."}).catch(e=>{const el=document.getElementById("studySaveStatus");if(el)el.textContent="Mentési hiba: "+e.message});
 }
 
+const studyConcepts={
+ lineVoltage:{
+  title:"Alapfogalmak – ezt jegyezd meg!",
+  items:[
+   {name:"Fázisfeszültség (U_f)",value:"230 V",meaning:"Egy fázisvezető (L1, L2 vagy L3) és a nullavezető (N) között mérjük. Például: L1–N = 230 V."},
+   {name:"Vonali feszültség (U_v)",value:"400 V",meaning:"Két különböző fázisvezető között mérjük. Például: L1–L2 = 400 V; ugyanígy L2–L3 és L3–L1 között."}
+  ],
+  note:"Szimmetrikus, csillagkapcsolású 400/230 V-os háromfázisú rendszerben U_v = √3 × U_f, ezért 230 V × 1,732 ≈ 400 V. A 230 V és 400 V ugyanannak a hálózatnak két különböző mérési módja."
+ }
+};
+function studyConceptFor(q){
+ if(q.id==="n2"||(/háromfázis|fázisfeszültség|vonali feszültség|fázis és.*nulla/i.test(q.q)&&/230|400/i.test(q.q)))return studyConcepts.lineVoltage;
+ return null;
+}
+function studyConceptHtml(q){
+ const c=studyConceptFor(q);
+ if(!c)return "";
+ return '<section class="lesson-example" aria-label="Kiemelt alapfogalmak"><h3>'+escaped(c.title)+'</h3>'+c.items.map(item=>'<p><strong>'+escaped(item.name)+': '+escaped(item.value)+'</strong><br>'+escaped(item.meaning)+'</p>').join('')+'<p class="muted">'+escaped(c.note)+'</p></section>';
+}
 const lessons={
 transformer:{
 title:"Transzformátor – az erőműtől a lakásod konnektoráig",
@@ -328,8 +347,8 @@ image:"https://commons.wikimedia.org/wiki/Special:FilePath/Three%20phase%20air-c
 credit:"Fotó: Craxd1 – Wikimedia Commons, szabad licenc",
 link:"https://commons.wikimedia.org/wiki/File:Three_phase_air-cooled_transformer.JPG"},
 network:{
-title:"Háromfázisú hálózatok – az összefüggések a gyakorlatban",
-intro:"A fázis–nulla és a fázis–fázis feszültség nem ugyanaz. A vonali és fázismennyiségek közti kapcsolatot a kapcsolási mód határozza meg.",
+title:"Fázisfeszültség és vonali feszültség – hol mérjük?",
+intro:"400/230 V-os szimmetrikus háromfázisú hálózatban fázisfeszültség: 230 V az L1–N, L2–N vagy L3–N vezetők között. Vonali feszültség: 400 V az L1–L2, L2–L3 vagy L3–L1 vezetők között. Ezeket a mérési pontokat minden feladatnál különítsd el.",
 steps:["1. Tisztázd, hogy fázisfeszültséget vagy vonali feszültséget kérdeznek.","2. Azonosítsd a kapcsolást és a megadott feszültséget.","3. Ellenőrizd a mértékegységeket, és csak utána számolj.","4. Gondold végig, mire használják az eredményt egy valódi elosztóban."],
 worked:"400/230 V-os csillagkapcsolású hálózatban a fázis–nulla feszültség kb. 230 V, a fázis–fázis feszültség kb. 400 V; a vonali feszültség a fázisfeszültség √3-szorosa.",
 real:"Egy műhelyben az egyfázisú konnektor 230 V-os, míg a háromfázisú gép megfelelő kapcsai között 400 V is megjelenhet. Téves feszültségválasztás károsíthatja a berendezést.",
