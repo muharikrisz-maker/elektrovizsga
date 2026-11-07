@@ -48,6 +48,7 @@ header:after{content:"";position:absolute;left:0;right:0;top:0;height:7px;backgr
 .study-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0}.study-card{border:1px solid #e1e3dc;border-radius:14px;padding:15px;background:#fff}.study-card h2{font-size:1.1rem}.study-card .button{font-size:.8rem}.study-feedback{margin-top:20px;padding:20px;border:1px solid #dfe7db;border-radius:14px;background:#f7faf6}.study-feedback details{margin:12px 0;line-height:1.7}.study-feedback summary{cursor:pointer;font-weight:600}.study-correct{border-color:#37966c!important;background:#eaf6ed!important}.study-wrong{border-color:#d15a5a!important;background:#fff0f0!important}@media(max-width:650px){.study-cards{grid-template-columns:1fr}}
 </style></head><body><main><header><div class="brand">⚡ Elektro<span>Vizsga</span></div><div class="tag">DEMO • 1.0</div></header><div id="app"></div><footer>Gyakorlóalkalmazás, nem hivatalos vizsgafelület. A mintakérdések saját szerkesztésűek, nem OSZTV-feladatok.</footer></main>
 <script src="questions-extra.js"></script>
+<script src="questions-practical.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="auth-config.js"></script>
 <script src="auth.js"></script>
@@ -66,7 +67,7 @@ const BANK=[
 {id:"b3",topic:"Villamos biztonságtechnika",q:"Melyik jelölés utal a védővezetőre villamos rajzon?",opts:["N","L1","PE","PEN kizárólag"],a:2,why:"A PE a védővezető; a PEN egyesített védő- és nullavezető."},
 {id:"b4",topic:"Villamos biztonságtechnika",q:"Melyik eszköz alkalmas önmagában túláram elleni védelemre megfelelő méretezés esetén?",opts:["ÁVK túláramvédelem nélkül","Kismegszakító","Egyszerű kapcsoló","Jelzőlámpa"],a:1,why:"A kismegszakító túlterhelés és zárlati túláram ellen is véd; a szokásos ÁVK önmagában nem túláramvédelmi eszköz."}
 ];
-BANK.push(...EXTRA_BANK);
+BANK.push(...EXTRA_BANK,...PRACTICAL_BANK);
 const app=document.getElementById("app");
 let state={mode:"home",order:[],cursor:0,answers:{},skipped:[],second:false,deadline:0,timer:null,topic:"Összes témakör"};
 const escaped=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -124,9 +125,9 @@ function skip(id){if(state.second)return;state.skipped.push(id);state.cursor++;r
 
 
 const STUDY_LEVELS=[
- {name:"Kezdő",description:"Alapfogalmak és gyors sikerélmények",ids:["n1","n2","n3","g1","g3","b1","b3","os02","os05","os06","os13","os14","os18"]},
- {name:"Középhaladó",description:"Összefüggések és egylépéses számítások",ids:["g2","b2","b4","os01","os07","os09","os10","os11","os15","fz02","fz04","fz08","fz09"]},
- {name:"Haladó",description:"Többlépéses számítások és vizsgafeladatok",ids:["fz01","fz03","fz05","fz06","fz07","os03","os04","os08","os12","os16","os17"]}
+ {name:"Kezdő",description:"Alapfogalmak és gyors sikerélmények",ids:["n1","n2","n3","g1","g3","b1","b3","os02","os05","os06","os13","os14","os18","p01","p02","p03","p11"]},
+ {name:"Középhaladó",description:"Összefüggések és egylépéses számítások",ids:["g2","b2","b4","os01","os07","os09","os10","os11","os15","fz02","fz04","fz08","fz09","p04","p05","p06","p07"]},
+ {name:"Haladó",description:"Többlépéses számítások és vizsgafeladatok",ids:["fz01","fz03","fz05","fz06","fz07","os03","os04","os08","os12","os16","os17","p08","p09","p10","p12"]}
 ];
 let study=null;
 function studyPool(level,topic){return shuffled(BANK.filter(q=>STUDY_LEVELS[level].ids.includes(q.id)&&(topic==="Összes témakör"||topic===q.topic)))}
@@ -273,7 +274,9 @@ function renderStudy(){
  const answered=Object.prototype.hasOwnProperty.call(study.answers,q.id);
  const correct=study.answers[q.id]===q.a;
  const l=lessons[lessonKey(q)];
- app.innerHTML='<section class="panel"><div class="stats"><div class="stat"><span class="muted small">Tanulás · '+escaped(STUDY_LEVELS[studyLevelOf(q)].name)+'</span><strong>'+(study.cursor+1)+' / '+study.questions.length+'</strong></div><div class="stat"><span class="muted small">Időkorlát</span><strong>Nincs</strong></div></div><div class="progress"><div style="width:'+Math.round(study.cursor/study.questions.length*100)+'%"></div></div><span class="pill">'+escaped(q.topic)+'</span><h2>'+escaped(q.q)+'</h2><div id="studyOptions">'+optionOrder(q,study.optionOrders).map((originalIndex,i)=>'<button class="option '+(answered&&originalIndex===q.a?'study-correct':answered&&originalIndex===study.answers[q.id]&&!correct?'study-wrong':'')+'" data-study-answer="'+originalIndex+'" '+(answered?'disabled':'')+'><strong>'+String.fromCharCode(65+i)+'</strong><span>'+escaped(q.opts[originalIndex])+'</span></button>').join('')+'</div>'+(answered?'<section class="study-feedback"><h2>'+(correct?'✓ Helyes!':'Nézzük meg együtt!')+'</h2><p>'+escaped(q.why)+'</p>'+studyConceptHtml(q)+'<h3>Hol használjuk a valóságban?</h3><p>'+escaped(l.real)+'</p><details><summary>Kidolgozott példa és további magyarázat</summary><p>'+escaped(l.intro)+'</p><p>'+escaped(l.worked)+'</p></details><div class="actions"><button class="button" id="studyNext">'+(study.cursor===study.questions.length-1?'Eredmény megtekintése':'Következő kérdés')+'</button></div></section>':'<p class="muted small">Válassz egy választ; utána azonnal elmagyarázzuk a megoldást.</p>')+'<div class="actions"><button class="button secondary" id="studyLeave">Gyakorlás megszakítása</button></div></section>';
+ const practicalIntro=q.intro?'<div class="lesson-card"><strong>Hol találkozol vele?</strong><p>'+escaped(q.intro)+'</p></div>':"";
+ const practicalHint=(!answered&&q.hint)?'<details class="lesson-example"><summary>Segítséget kérek, de ne mondd meg a választ!</summary><p>'+escaped(q.hint)+'</p></details>':"";
+ app.innerHTML='<section class="panel"><div class="stats"><div class="stat"><span class="muted small">Tanulás · '+escaped(STUDY_LEVELS[studyLevelOf(q)].name)+'</span><strong>'+(study.cursor+1)+' / '+study.questions.length+'</strong></div><div class="stat"><span class="muted small">Időkorlát</span><strong>Nincs</strong></div></div><div class="progress"><div style="width:'+Math.round(study.cursor/study.questions.length*100)+'%"></div></div><span class="pill">'+escaped(q.topic)+'</span><h2>'+escaped(q.q)+'</h2>'+practicalIntro+'<div id="studyOptions">'+optionOrder(q,study.optionOrders).map((originalIndex,i)=>'<button class="option '+(answered&&originalIndex===q.a?'study-correct':answered&&originalIndex===study.answers[q.id]&&!correct?'study-wrong':'')+'" data-study-answer="'+originalIndex+'" '+(answered?'disabled':'')+'><strong>'+String.fromCharCode(65+i)+'</strong><span>'+escaped(q.opts[originalIndex])+'</span></button>').join('')+'</div>'+(!answered?practicalHint:"")+(answered?'<section class="study-feedback"><h2>'+(correct?'✓ Helyes!':'Nézzük meg együtt!')+'</h2><p>'+escaped(q.why)+'</p>'+studyConceptHtml(q)+'<h3>Hol veszed hasznát a hétköznapokban?</h3><p>'+escaped(q.real||l.real)+'</p><details><summary>Kidolgozott példa és további magyarázat</summary><p>'+escaped(l.intro)+'</p><p>'+escaped(l.worked)+'</p></details><div class="actions"><button class="button" id="studyNext">'+(study.cursor===study.questions.length-1?'Eredmény megtekintése':'Következő kérdés')+'</button></div></section>':'<p class="muted small">Válassz egy választ; utána azonnal elmagyarázzuk a megoldást.</p>')+'<div class="actions"><button class="button secondary" id="studyLeave">Gyakorlás megszakítása</button></div></section>';
  document.querySelectorAll("[data-study-answer]").forEach(b=>b.onclick=()=>{if(!Object.prototype.hasOwnProperty.call(study.answers,q.id)){study.answers[q.id]=Number(b.dataset.studyAnswer);renderStudy()}});
  if(answered)document.getElementById("studyNext").onclick=()=>{study.cursor++;renderStudy()};
  document.getElementById("studyLeave").onclick=()=>{if(confirm("Biztosan megszakítod a gyakorlást?"))studyHome()};
