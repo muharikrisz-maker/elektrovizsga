@@ -17,7 +17,7 @@ window.ElektroAuth={
  init,available,
  getUser(){return session?.user||null},
  onChange(fn){listeners.add(fn);return ()=>listeners.delete(fn)},
- async sendLink(email){const c=init();if(!c)throw Error("Az e-mailes belépés szerveroldali beállítása még hiányzik.");const {error}=await c.auth.signInWithOtp({email,emailRedirectTo:window.location.origin+window.location.pathname,options:{shouldCreateUser:true}});if(error)throw error},
+ async sendLink(email){const c=init();if(!c)throw Error("Az e-mailes belépés szerveroldali beállítása még hiányzik.");const {error}=await c.auth.signInWithOtp({email,options:{emailRedirectTo:window.location.origin+window.location.pathname,shouldCreateUser:true}});if(error)throw error},
  async signOut(){const c=init();if(!c)return;const {error}=await c.auth.signOut();if(error)throw error;session=null;listeners.forEach(fn=>fn(session))},
  async saveAttempt(record){const c=init();if(!c||!session?.user)return false;const {error}=await c.from("exam_attempts").insert({user_id:session.user.id,score:record.score,total:record.total,topic:record.topic,answers:record.answers,created_at:new Date().toISOString()});if(error)throw error;return true},
  async history(){const c=init();if(!c||!session?.user)return[];const {data,error}=await c.from("exam_attempts").select("id,score,total,topic,answers,created_at").eq("user_id",session.user.id).order("created_at",{ascending:false}).limit(200);if(error)throw error;return data||[]}
