@@ -349,11 +349,11 @@ worked:"Egy egyszerűsített, 230 V-os ellenállásos fűtőtest üzemi ellenál
 real:"Ilyen nagyságrendű terhelés lehet például egy körülbelül 1150 W-os elektromos fűtőtest fűtőszála. Ez szemléltető, tisztán ohmos modell: a valós fűtőszál ellenállása a hőmérséklettel változhat.",
 image:null,credit:null,link:null},
 parallel:{
-title:"Párhuzamos ellenállások – két egyforma ág",
-intro:"Párhuzamos kapcsolásban mindkét ellenállás ugyanakkora feszültséget kap, a teljes áram pedig az ágáramok összege.",
-steps:["1. Két 100 Ω-os ellenállás van párhuzamosan.","2. Azonos ellenállások esetén az eredő a közös ellenállás fele.","3. Az eredő 100 Ω / 2 = 50 Ω.","4. Az eredő kisebb, mint bármelyik külön ellenállás."],
-worked:"Ha két 100 Ω-os ellenállást ugyanarra a 12 V-os tápegységre párhuzamosan kötünk, mindkét ágon 12 / 100 = 0,12 A folyik. Együtt 0,24 A-t vesznek fel, így az eredő R = 12 / 0,24 = 50 Ω.",
-real:"Egy demonstrációs áramkörben két különálló ellenállást párhuzamosan kapcsolva több áram folyik a tápegységből, mint egyetlen ellenállással. A példa kisfeszültségű, oktatási kapcsolás.",
+title:"Két fűtőellenállás: párhuzamos vagy soros kapcsolás?",
+intro:"Egy villamos fűtőberendezés két azonos, 100 Ω-os fűtőellenállását vizsgáljuk 230 V-os táplálással. A kapcsolási mód nemcsak az eredő ellenállást változtatja meg, hanem a betáplálás áramát és a vezeték terhelését is. A 230 V hálózati feszültség veszélyes; ez elméleti számítás, nem bekötési útmutató.",
+steps:["1. Párhuzamosan mindkét 100 Ω-os fűtőellenállásra 230 V jut.","2. Az ágáramok I₁ = I₂ = 230 / 100 = 2,3 A; a betáplálásban az összáram 4,6 A.","3. Az eredő R = 230 / 4,6 = 50 Ω. Két azonos párhuzamos ellenállás eredője az egyik fele.","4. Sorosan az eredő R = 100 + 100 = 200 Ω; a közös áram 230 / 200 = 1,15 A, az egyes ellenállásokra 115 V jut.","5. A betápláló vezeték terhelése párhuzamosan 4,6 A, sorosan 1,15 A. Ezt figyelembe kell venni az áramkör kialakításakor és méretezésekor."],
+worked:"Párhuzamosan: Rₑ = 50 Ω, I₁ = I₂ = 2,3 A, Iössz = 4,6 A, Pössz = 230 × 4,6 = 1058 W. Sorosan: Rₑ = 200 Ω, I = 1,15 A, Pössz = 230 × 1,15 = 264,5 W. A fűtőellenállások értékét a feladatban állandónak tekintjük; a valós ellenállás hőmérséklettől függhet.",
+real:"Villanyszerelőként a tápkábel és a túláramvédelmi eszköz kiválasztásánál a várható terhelőárammal számolsz. Ebben a példában párhuzamos kapcsolásnál a közös betáplálás 4,6 A-t visz, nem csak az egyik ág 2,3 A-ét. A kábel keresztmetszetét viszont nem lehet pusztán ebből az áramértékből megmondani: ellenőrizni kell a fektetési módot, hosszúságot, feszültségesést, hőmérsékletet, csoportosítást, túláramvédelmet és a hibavédelem feltételeit. A fűtőelemeket csak a gyártó által engedélyezett kapcsolásban szabad üzemeltetni.",
 image:null,credit:null,link:null},
 short:{
 title:"Zárlatszámítás – mitől függ a zárlati áram?",
