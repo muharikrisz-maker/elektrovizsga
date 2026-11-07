@@ -290,6 +290,20 @@ function finishStudy(){
 }
 
 const lessons={
+ohm:{
+title:"Ohm-törvény – egy ellenállásos fűtőtest példáján",
+intro:"Egy ohmos fogyasztónál a feszültség, az áramerősség és az ellenállás összetartozik. Ha a feszültség és az ellenállás ismert, az áramot osztással számoljuk ki.",
+steps:["1. Írd fel az ismert adatokat: U = 230 V és R = 46 Ω.","2. A keresett mennyiség az áramerősség: I = U / R.","3. Helyettesíts be: 230 V / 46 Ω = 5 A.","4. Ellenőrizd az eredményt: 5 A × 46 Ω = 230 V."],
+worked:"Egy egyszerűsített, 230 V-os ellenállásos fűtőtest üzemi ellenállása 46 Ω. A rajta folyó áram 5 A. A felvett villamos teljesítmény P = U × I = 230 V × 5 A = 1150 W. Ez nagyjából egy 1,15 kW-os elektromos fűtőtesttel egyezik meg.",
+real:"Ilyen nagyságrendű terhelés lehet például egy körülbelül 1150 W-os elektromos fűtőtest fűtőszála. Ez szemléltető, tisztán ohmos modell: a valós fűtőszál ellenállása a hőmérséklettel változhat.",
+image:null,credit:null,link:null},
+parallel:{
+title:"Párhuzamos ellenállások – két egyforma ág",
+intro:"Párhuzamos kapcsolásban mindkét ellenállás ugyanakkora feszültséget kap, a teljes áram pedig az ágáramok összege.",
+steps:["1. Két 100 Ω-os ellenállás van párhuzamosan.","2. Azonos ellenállások esetén az eredő a közös ellenállás fele.","3. Az eredő 100 Ω / 2 = 50 Ω.","4. Az eredő kisebb, mint bármelyik külön ellenállás."],
+worked:"Ha két 100 Ω-os ellenállást ugyanarra a 12 V-os tápegységre párhuzamosan kötünk, mindkét ágon 12 / 100 = 0,12 A folyik. Együtt 0,24 A-t vesznek fel, így az eredő R = 12 / 0,24 = 50 Ω.",
+real:"Egy demonstrációs áramkörben két különálló ellenállást párhuzamosan kapcsolva több áram folyik a tápegységből, mint egyetlen ellenállással. A példa kisfeszültségű, oktatási kapcsolás.",
+image:null,credit:null,link:null},
 short:{
 title:"Zárlatszámítás – mitől függ a zárlati áram?",
 intro:"Ha egy elosztóban zárlat keletkezik, a transzformátor, a hálózat és a vezetékek impedanciája korlátozza a kialakuló áramot.",
@@ -321,7 +335,7 @@ worked:"Egyszerűsített TN hurokimpedancia-példa: U₀ = 230 V, Iₐ = 50 A. A
 real:"Ha egy gép fémházára fázisvezető kerül, a hibavédelemnek meghatározott körülmények között le kell kapcsolnia. A PE-vezető, a hurok és a védelmi eszköz ezért nem egymástól független fogalmak.",
 image:null,credit:null,link:null}
 };
-function lessonKey(q){if(q.id.startsWith("fz")||/zárlat|rövidzárási|lökőáram|impedanciáj/i.test(q.q))return "short";if(q.topic.includes("gépek"))return "machine";if(q.topic.includes("biztonság"))return "safety";return "network"}
+function lessonKey(q){if(q.id==="n1"||/230 V.*46 Ω|Ohm.törvény alapján.*U.*R/i.test(q.q))return "ohm";if(q.id==="n3"||/Két 100 Ω.os ellenállást párhuzamosan/i.test(q.q))return "parallel";if(q.id.startsWith("fz")||/zárlat|rövidzárási|lökőáram|impedanciáj/i.test(q.q))return "short";if(q.topic.includes("gépek"))return "machine";if(q.topic.includes("biztonság"))return "safety";return "network"}
 function renderLesson(q){const l=lessons[lessonKey(q)];return '<section class="panel"><span class="pill">Tanítócsomag · '+escaped(q.topic)+'</span><h1>'+escaped(l.title)+'</h1><p>'+escaped(l.intro)+'</p>'+(l.image?'<figure class="lesson-photo"><img src="'+l.image+'" loading="lazy" alt="Villamos berendezés fotója a tananyaghoz" referrerpolicy="no-referrer"><figcaption>'+escaped(l.credit)+' · <a href="'+l.link+'" target="_blank" rel="noopener noreferrer">Forrás és licenc</a></figcaption></figure>':'<div class="lesson-diagram" role="img" aria-label="Egyszerűsített háromfázisú vezetőábra"><span>L1 ──────────────────</span><span>L2 ──────────────────</span><span>L3 ──────────────────</span><span>N  ──────────────────</span><small>Elvi szemléltetés, nem szerelési utasítás</small></div>')+'<h2>Így gondold végig</h2><ol class="lesson-steps">'+l.steps.map(x=>'<li>'+escaped(x)+'</li>').join('')+'</ol><h2>Kidolgozott példa</h2><div class="lesson-example">'+escaped(l.worked)+'</div><h2>Hol találkozol vele a valóságban?</h2><div class="lesson-card">'+escaped(l.real)+'</div><h2>Próbáld újra!</h2><p class="muted">Most olyan kérdéseket kapsz, amelyek ehhez a témához kapcsolódnak. Előbb gondold végig a megoldást, és csak utána nézd meg a magyarázatot.</p><div class="actions"><button class="button" id="practiceLesson">5 kérdés gyakorlása</button><button class="button secondary" id="backResults">Vissza az értékeléshez</button></div></section>'}
 function showLesson(qid){const q=BANK.find(item=>item.id===qid);if(!q)return;stopTimer();state.mode="lesson";app.innerHTML=renderLesson(q);document.getElementById("practiceLesson").onclick=()=>startReview(lessonKey(q));document.getElementById("backResults").onclick=()=>finish(true)}
 function startReview(key){const questions=shuffled(BANK.filter(q=>lessonKey(q)===key)).slice(0,5);stopTimer();state={mode:"exam",order:questions.map(q=>q.id),selectedIds:questions.map(q=>q.id),cursor:0,answers:{},skipped:[],second:false,deadline:Date.now()+45*60*1000,timer:null,topic:questions[0]?.topic||"Összes témakör"};state.timer=setInterval(tick,1000);render()}
