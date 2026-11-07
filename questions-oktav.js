@@ -143,7 +143,8 @@ const OKTAV_BANK = [
     "intro": "Egyfázisú táplálásnál az oda- és visszavezető teljes hosszával számolj.",
     "hint": "A 20 m kábelhosszt duplázd, utána R = ρ·l/A.",
     "real": "A hosszabbítók és távoli fogyasztók működését a feszültségesés is befolyásolja.",
-    "source": "OKTÁV 2025, 1.10/1051 – új, számszerűsített gyakorlat"
+    "source": "OKTÁV 2025, 1.10/1051 – új, számszerűsített gyakorlat",
+    "worked": "A fogyasztó 20 m-re van, de az áram a fázisvezetőn oda, a nullavezetőn vissza folyik, így a számított teljes rézhossz 40 m. 1 mm²-es vezetőn R = 0,0175 · 40 / 1 = 0,7 Ω. 4 A esetén a feszültségesés 4 · 0,7 = 2,8 V. Valós telepítésnél a megengedett feszültségesést, a terhelhetőséget és a védelmet is ellenőrizni kell."
   },
   {
     "id": "o09",
@@ -287,7 +288,8 @@ const OKTAV_BANK = [
     "intro": "A frekvencia azt mutatja, hány teljes periódus történik egy másodperc alatt.",
     "hint": "A periódusidő reciproka a frekvencia.",
     "real": "Hálózatok, frekvenciaváltók és motorvezérlések alapfogalma.",
-    "source": "OKTÁV 2025, 3.2/1372 – részfeladat alapján"
+    "source": "OKTÁV 2025, 3.2/1372 – részfeladat alapján",
+    "worked": "A periódusidő egy teljes rezgés ideje. Ha T = 0,01 s, akkor egy másodperc alatt 1 / 0,01 = 100 teljes periódus történik, tehát f = 100 Hz. Összehasonlítás: az 50 Hz-es hálózat periódusideje T = 1 / 50 = 0,02 s, vagyis 20 ms. Minél rövidebb egy periódus, annál nagyobb a frekvencia."
   },
   {
     "id": "o17",
@@ -305,7 +307,8 @@ const OKTAV_BANK = [
     "intro": "Szinuszos feszültségnél az effektív érték a hőhatás szerint egyenértékű egyenfeszültség.",
     "hint": "Oszd a csúcsértéket √2-vel.",
     "real": "A multiméterek jellemzően effektív feszültséget jeleznek, az oszcilloszkóp a hullámalakot mutatja.",
-    "source": "OKTÁV 2025, 3.2/1372 – átdolgozva"
+    "source": "OKTÁV 2025, 3.2/1372 – átdolgozva",
+    "worked": "Szinuszos váltakozó feszültségnél a csúcsérték és az effektív érték különbözik. Például 325 V csúcsfeszültségből Ueff = 325 / √2 ≈ 230 V adódik. Ezért a konnektor 230 V-os effektív értéke mellett a feszültség pillanatnyi csúcsa kb. 325 V."
   },
   {
     "id": "o18",
@@ -395,7 +398,8 @@ const OKTAV_BANK = [
     "intro": "A veszteségek miatt a motor több villamos teljesítményt vesz fel, mint amennyit mechanikusan lead.",
     "hint": "A leadott teljesítményt oszd a hatásfokkal (0,81).",
     "real": "A motortáblákon szereplő teljesítmény és a villanyfogyasztás nem feltétlenül ugyanaz.",
-    "source": "OKTÁV 2025, 4.12/1414 – részfeladat alapján"
+    "source": "OKTÁV 2025, 4.12/1414 – részfeladat alapján",
+    "worked": "Ha a motor 1700 W mechanikai teljesítményt ad le és a hatásfoka 81%, akkor a bemenő villamos teljesítmény 1700 / 0,81 ≈ 2099 W. A különbség, körülbelül 399 W, veszteségként jelentkezik, például hő formájában. A felvett áram számításához további adatok, például feszültség és teljesítménytényező szükségesek."
   },
   {
     "id": "o23",
