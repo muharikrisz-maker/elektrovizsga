@@ -62,7 +62,7 @@
     const user=window.ElektroAuth?.getUser();
     if(!user)throw Error("A mentéshez jelentkezz be.");
     const trimmed=String(rawAnswer||"").trim();
-    const parsed=Number(trimmed.replace(/\\s/g,"").replace(",","."));
+    const parsed=Number(trimmed.replace(/\s/g,"").replace(",","."));
     if(!trimmed||!Number.isFinite(parsed))throw Error("Érvényes számot adj meg.");
     const correct=Math.abs(parsed-q.answer)<=Math.max(0.011,Math.abs(q.answer)*0.001);
     const {data,error}=await window.ElektroAuth.getClient().from("generated_questions")
