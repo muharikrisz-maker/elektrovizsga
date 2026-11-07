@@ -15,6 +15,7 @@ function init(){
 }
 window.ElektroAuth={
  init,available,
+ getClient(){return init()},
  getUser(){return session?.user||null},
  onChange(fn){listeners.add(fn);return ()=>listeners.delete(fn)},
  async sendLink(email){const c=init();if(!c)throw Error("Az e-mailes belépés szerveroldali beállítása még hiányzik.");const {error}=await c.auth.signInWithOtp({email,options:{emailRedirectTo:window.location.origin+window.location.pathname,shouldCreateUser:true}});if(error)throw error},
