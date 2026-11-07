@@ -424,10 +424,10 @@ const OKTAV_BANK = [
       "2 A",
       "1,59 A",
       "0,62 A",
-      "1,244 A"
+      "1,25 A"
     ],
     "a": 3,
-    "why": "Z = √(50²+62,8²) ≈ 80,27 Ω; I = 100/80,27 ≈ 1,246 A.",
+    "why": "Z = √(50²+62,8²) ≈ 80,27 Ω; I = 100/80,27 ≈ 1,246 A ≈ 1,25 A.",
     "intro": "Soros R–L körben az ohmos és induktív feszültségeket nem egyszerűen összeadjuk.",
     "hint": "A reaktanciából és ellenállásból számold ki az impedanciát.",
     "real": "Motorok és tekercsek váltakozó áramú mérésének alapja.",
