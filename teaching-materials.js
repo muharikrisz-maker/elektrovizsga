@@ -1,224 +1,224 @@
 // Minden vizsgakérdés saját tanulási segédanyaga. Új kérdésnél kötelező minden mező!
 const TEACHING_MATERIALS = {
   "n1": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Egy 230 V feszültségre kapcsolt, 46 Ω ellenállású fogyasztón mekkora áram folyik.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. Ohm törvénye alapján I .",
+    "intro": "Ohmos fogyasztónál az áram, a feszültség és az ellenállás közül két ismert mennyiségből kiszámítható a harmadik.",
+    "hint": "Figyeld meg, melyik két mennyiség adott, és az Ohm-törvény melyik átrendezése kell.",
     "worked": "Másik eset: U = 48 V, R = 16 Ω. I = 48/16 = 3 A.",
     "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
   },
   "n2": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Ideális, szimmetrikus háromfázisú 400/230 V hálózatban mekkora a fázisfeszültség.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. Csillagkapcsolásban U_f .",
+    "intro": "Háromfázisú hálózatban a fázis–nulla és a fázis–fázis feszültség nem azonos.",
+    "hint": "Először döntsd el, hogy fázis–nulla vagy két különböző fázis közötti feszültségről beszélünk.",
     "worked": "690 V vonali feszültség mellett U_f = 690/√3 ≈ 398,4 V (szimmetrikus csillagrendszer).",
     "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
   },
   "n3": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Két 100 Ω-os ellenállást párhuzamosan kapcsolunk. Mennyi az eredő.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. Két azonos ellenállás párhuzamos eredője R/2 .",
+    "intro": "Párhuzamos és soros elemeknél az eredő érték a kapcsolás módjától függ.",
+    "hint": "Írd fel a kapcsolási módhoz tartozó eredőképletet, ne csak a számokat add össze.",
     "worked": "Két azonos 60 Ω-os párhuzamos ág: 1/R_e = 1/60+1/60, ezért R_e = 30 Ω.",
     "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
   },
   "g1": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Mi a transzformátor alapvető működési elve.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. A primer tekercs változó mágneses fluxusa feszültséget indukál a szekunder tekercsben.",
+    "intro": "A transzformátor menetszám- és feszültségáttétele megadja a különböző oldalak közti kapcsolatot.",
+    "hint": "A primer és szekunder mennyiségeket mindig azonos oldali adatokra vonatkoztasd.",
     "worked": "Ideális transzformátor: 1000 primer és 100 szekunder menet esetén 230 V primerből körülbelül 23 V szekunder feszültség lesz.",
     "real": "Gépek telepítése és üzemeltetése közben a névleges adatokat és a tényleges méréseket is össze kell vetni."
   },
   "g2": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Mit jelent az aszinkronmotor szlipje.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. A szlip s .",
+    "intro": "Aszinkronmotornál a forgómező fordulatszáma és a tengely tényleges fordulata eltér.",
+    "hint": "Különítsd el a szinkron és a tényleges fordulatszámot; a pólusszámot se keverd a póluspárszámmal.",
     "worked": "Szinkron fordulat 1500 1/min, tényleges 1470 1/min: s = (1500−1470)/1500 = 2%.",
     "real": "Gépek telepítése és üzemeltetése közben a névleges adatokat és a tényleges méréseket is össze kell vetni."
   },
   "g3": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Egy 2 kW teljesítményű, állandó teljesítményen üzemelő fűtőtest 3 óra alatt mennyi energiát fogyaszt.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. E .",
+    "intro": "A villamos teljesítmény a fogyasztás sebességét, az energia pedig az idő alatt elfogyasztott mennyiséget írja le.",
+    "hint": "A W és kW közti váltást végezd el, majd az üzemidővel számolj.",
     "worked": "Egy 1,5 kW-os radiátor 4 óra alatt E = 1,5·4 = 6 kWh energiát használ el folyamatos üzemben.",
     "real": "Gépek telepítése és üzemeltetése közben a névleges adatokat és a tényleges méréseket is össze kell vetni."
   },
   "b1": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Milyen célra szolgál a PE-vezető.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. A PE védővezető, normál üzemben nem rendeltetésszerű üzemi áramvezető.",
+    "intro": "A védővezető és a hibavédelem célja, hogy a hozzáférhető vezetőképes részek hibája ne okozhasson veszélyes állapotot.",
+    "hint": "A PE, N és PEN jelölések rendeltetését különböztesd meg.",
     "worked": "Fémházas, I. érintésvédelmi osztályú mosógépnél a gépház a PE-hez kapcsolódik; normál üzemi áram nem a PE-n folyik.",
     "real": "Villamos biztonsági ellenőrzéskor az elméleti összefüggést a készülék adataival és a vonatkozó előírásokkal együtt kell értelmezni."
   },
   "b2": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Mit érzékel az áram-védőkapcsoló (ÁVK) alapvetően.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. Az ÁVK az átvezetett vezetők áramainak eredőjét figyeli: eltérő oda- és visszafolyó áram e.",
+    "intro": "Az áram-védőkapcsoló különbözeti áramra reagál, működése eltér a túláramvédelmi eszközétől.",
+    "hint": "Gondold végig, mit vizsgál az ÁVK és mire nem alkalmas önmagában.",
     "worked": "Ha a fázison 5,00 A, a nullán 4,97 A folyik, a különbségi áram 0,03 A = 30 mA. Ezt érzékeli az ÁVK.",
     "real": "Villamos biztonsági ellenőrzéskor az elméleti összefüggést a készülék adataival és a vonatkozó előírásokkal együtt kell értelmezni."
   },
   "b3": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Melyik jelölés utal a védővezetőre villamos rajzon.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. A PE a védővezető; a PEN egyesített védő- és nullavezető.",
+    "intro": "A védővezető és a hibavédelem célja, hogy a hozzáférhető vezetőképes részek hibája ne okozhasson veszélyes állapotot.",
+    "hint": "A PE, N és PEN jelölések rendeltetését különböztesd meg.",
     "worked": "Az L1 fázisvezető, az N nullavezető, a PE védővezető; a PEN egyesített védő- és nullavezető.",
     "real": "Villamos biztonsági ellenőrzéskor az elméleti összefüggést a készülék adataival és a vonatkozó előírásokkal együtt kell értelmezni."
   },
   "b4": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Melyik eszköz alkalmas önmagában túláram elleni védelemre megfelelő méretezés esetén.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. A kismegszakító túlterhelés és zárlati túláram ellen is véd; a szokásos ÁVK önmagában nem .",
+    "intro": "Túlterhelés és zárlat esetén a megfelelő védelmi eszköz és az áramkör összehangolása számít.",
+    "hint": "A névleges áram, a tényleges terhelés és a vezeték terhelhetősége együtt fontos.",
     "worked": "B16 kismegszakító megfelelő méretezés esetén túláram ellen véd; hagyományos 30 mA-es ÁVK önmagában nem.",
     "real": "Villamos biztonsági ellenőrzéskor az elméleti összefüggést a készülék adataival és a vonatkozó előírásokkal együtt kell értelmezni."
   },
   "fz01": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Egy 10 kV-os oldalra vonatkoztatott, 2 MVA névleges teljesítményű transzformátor rövidzárási feszültsége 5%. Mennyi a névleges impedanciájának nagysága.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. Z .",
+    "intro": "A transzformátor rövidzárási feszültsége összefügg a helyettesítő impedanciával.",
+    "hint": "A százalékértéket váltsd tizedestörtté, és mindig jelöld a vonatkoztatási oldalt.",
     "worked": "U_n = 20 kV, S_n = 4 MVA, u_k = 6%: Z = 0,06·20 000²/4 000 000 = 6 Ω a 20 kV-os oldalra.",
     "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
   },
   "fz02": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Két azonos, egyenként 2,5 Ω impedanciájú transzformátor impedanciáját párhuzamosan kapcsoljuk. Mennyi az eredő.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. Két azonos párhuzamos impedancia eredője Z/2 .",
+    "intro": "Két azonos, azonos fázisú impedancia párhuzamos eredője a felére csökken.",
+    "hint": "Ha az impedanciák azonosak, az eredő kiszámításához oszd kettővel az egyedi értéket.",
     "worked": "Két azonos, egyenként 4 Ω komplex impedancia párhuzamos eredőjének nagysága 2 Ω.",
     "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
   },
   "fz03": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Egy transzformátor 10 kV-os oldali impedanciája 2,5 Ω. A feszültségáttétel 10/0,4 = 25. Mennyi az impedancia a 0,4 kV-os oldalra átszámítva.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. Az impedancia az áttétel négyzetével módosul: 2,5 / 25² .",
+    "intro": "A transzformátor menetszám- és feszültségáttétele megadja a különböző oldalak közti kapcsolatot.",
+    "hint": "A primer és szekunder mennyiségeket mindig azonos oldali adatokra vonatkoztasd.",
     "worked": "6/0,4 kV áttételnél a = 15; a primerre megadott 9 Ω a szekunderen 9/15² = 0,04 Ω.",
     "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
   },
   "fz04": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Két azonos transzformátor mindegyikének a kisfeszültségű oldalra átszámított impedanciája 0,004 Ω. Mennyi a két párhuzamos transzformátor eredő impedanciája.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. Azonos impedanciák párhuzamosan: 0,004/2 .",
+    "intro": "Két azonos, azonos fázisú impedancia párhuzamos eredője a felére csökken.",
+    "hint": "Ha az impedanciák azonosak, az eredő kiszámításához oszd kettővel az egyedi értéket.",
     "worked": "Két azonos, 0,006 Ω-os transzformátorimpedancia párhuzamos eredője 0,003 Ω.",
     "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
   },
   "fz05": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Háromfázisú, szimmetrikus zárlatnál a vonali feszültség 400 V, a teljes helyettesítő impedancia 0,020 Ω. Az egyszerűsített I = U/(√3·Z) képlettel mekkora a zárlati áram.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. I .",
+    "intro": "A zárlati áram és a védelmi feltételek számításakor fontos a megfelelő egyszerűsített modell.",
+    "hint": "Olvasd le a képletben előírt feszültséget, áramot és korrekciós tényezőt.",
     "worked": "400 V-os háromfázisú zárlati modellben Z = 0,04 Ω esetén I = 400/(√3·0,04) ≈ 5774 A.",
     "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
   },
   "fz06": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Egy háromfázisú hálózat zárlati teljesítménye 60 MVA, a vonali feszültség 10 kV. Az S = √3·U·I összefüggés alapján mekkora az áram.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. I .",
+    "intro": "A zárlati áram és a védelmi feltételek számításakor fontos a megfelelő egyszerűsített modell.",
+    "hint": "Olvasd le a képletben előírt feszültséget, áramot és korrekciós tényezőt.",
     "worked": "S_k = 30 MVA és U_v = 10 kV: I_k = 30/(√3·10) ≈ 1,73 kA.",
     "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
   },
   "fz07": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Szimmetrikus zárlatnál a kezdeti effektív áram 3,0 kA és a csúcstényező κ = 1,8. Az iₚ = κ√2·I'' képlettel mekkora a lökőáram.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. iₚ .",
+    "intro": "A zárlati áram és a védelmi feltételek számításakor fontos a megfelelő egyszerűsített modell.",
+    "hint": "Olvasd le a képletben előírt feszültséget, áramot és korrekciós tényezőt.",
     "worked": "Ha I″ = 5 kA és κ = 1,5, akkor i_p = 1,5·√2·5 ≈ 10,61 kA.",
     "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
   },
   "fz08": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Egy kábel pozitív sorrendű fajlagos reaktanciája 0,33 Ω/km, hossza 5 km. Mennyi a teljes reaktanciája, ha az érték állandó.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. X .",
+    "intro": "Az egyenletes vezető hossza arányosan befolyásolja a teljes ellenállást vagy reaktanciát.",
+    "hint": "Az egységnyi hosszra megadott értéket a teljes hosszal szorozd.",
     "worked": "0,25 Ω/km fajlagos reaktancia és 8 km hossz esetén X = 0,25·8 = 2 Ω.",
     "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
   },
   "fz09": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Ha a transzformátor százalékos rövidzárási feszültsége 5%-ról 10%-ra nő, miközben Uₙ és Sₙ állandó, hogyan változik a számított impedancia.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. Z .",
+    "intro": "A transzformátor rövidzárási feszültsége összefügg a helyettesítő impedanciával.",
+    "hint": "A százalékértéket váltsd tizedestörtté, és mindig jelöld a vonatkoztatási oldalt.",
     "worked": "Ha u_k 4%-ról 8%-ra emelkedik azonos U_n és S_n mellett, a számított impedancia megduplázódik.",
     "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
   },
   "os01": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: 230/400 V-os berendezés szigetelési ellenállásának szokásos, 500 V DC vizsgálatához melyik műszer való.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. A szigetelésmérő meghatározott egyenfeszültségű próbával méri a szigetelési ellenállást; a.",
+    "intro": "A szigetelésmérés különleges mérési eljárás, nem egyszerű üzemi feszültségmérés.",
+    "hint": "A vizsgálófeszültség típusa és a műszer rendeltetése alapján válassz.",
     "worked": "500 V DC vizsgálófeszültségnél 1 MΩ szigetelési ellenálláshoz elméletben 0,5 mA szivárgóáram tartozik. A vizsgálatot előírás szerint végezzük.",
     "real": "Villamos biztonsági ellenőrzéskor az elméleti összefüggést a készülék adataival és a vonatkozó előírásokkal együtt kell értelmezni."
   },
   "os02": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Mit ellenőriz az áram-védőkapcsoló beépített TEST gombjának működtetése.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. A TEST gomb belső próbaáramot idéz elő; nem helyettesíti a teljes villamos biztonsági felü.",
+    "intro": "Az áram-védőkapcsoló különbözeti áramra reagál, működése eltér a túláramvédelmi eszközétől.",
+    "hint": "Gondold végig, mit vizsgál az ÁVK és mire nem alkalmas önmagában.",
     "worked": "Egy 30 mA-es ÁVK TEST gombja belső próbaáramot idéz elő; a kioldási időt azonban nem méri meg.",
     "real": "Villamos biztonsági ellenőrzéskor az elméleti összefüggést a készülék adataival és a vonatkozó előírásokkal együtt kell értelmezni."
   },
   "os03": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Egy TN-rendszerű végáramkörben U₀ = 230 V, a védelemhez szükséges kioldóáram Iₐ = 50 A. Az egyszerűsített Zₛ ≤ U₀/Iₐ feltétel szerint mennyi a legnagyobb megengedett hurokimpedancia.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. Zₛ,max .",
+    "intro": "A zárlati áram és a védelmi feltételek számításakor fontos a megfelelő egyszerűsített modell.",
+    "hint": "Olvasd le a képletben előírt feszültséget, áramot és korrekciós tényezőt.",
     "worked": "U_0 = 230 V, I_a = 100 A: az egyszerűsített határ Z_s,max = 230/100 = 2,3 Ω.",
     "real": "Villamos biztonsági ellenőrzéskor az elméleti összefüggést a készülék adataival és a vonatkozó előírásokkal együtt kell értelmezni."
   },
   "os04": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Egy 230 V-os TN végáramkört B10-es kismegszakító véd. Ha a számításhoz az 5·Iₙ kioldóárammal számolunk, mekkora a Zₛ,max egyszerűsített értéke.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. Iₐ .",
+    "intro": "A zárlati áram és a védelmi feltételek számításakor fontos a megfelelő egyszerűsített modell.",
+    "hint": "Olvasd le a képletben előírt feszültséget, áramot és korrekciós tényezőt.",
     "worked": "B16 védelemnél az oktatási 5·I_n feltétellel I_a = 80 A, így Z_s,max = 230/80 = 2,875 Ω.",
     "real": "Villamos biztonsági ellenőrzéskor az elméleti összefüggést a készülék adataival és a vonatkozó előírásokkal együtt kell értelmezni."
   },
   "os05": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Mi a PE jelű vezető fő rendeltetése.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. A PE védővezető a hibavédelmi rendszer része; normál üzemi áram vezetésére nem szolgál.",
+    "intro": "A védővezető és a hibavédelem célja, hogy a hozzáférhető vezetőképes részek hibája ne okozhasson veszélyes állapotot.",
+    "hint": "A PE, N és PEN jelölések rendeltetését különböztesd meg.",
     "worked": "Fémházas I. osztályú gépen a hozzáférhető fémrészeket a PE-hez kapcsolják, hogy az előírt hibavédelmi feltételek teljesüljenek.",
     "real": "Villamos biztonsági ellenőrzéskor az elméleti összefüggést a készülék adataival és a vonatkozó előírásokkal együtt kell értelmezni."
   },
   "os06": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Melyik állítás helyes egy hagyományos, túláramvédelem nélküli ÁVK-ról.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. A hagyományos ÁVK maradékáram-védelemre szolgál; a túláramvédelem külön eszközt igényelhet.",
+    "intro": "Az áram-védőkapcsoló különbözeti áramra reagál, működése eltér a túláramvédelmi eszközétől.",
+    "hint": "Gondold végig, mit vizsgál az ÁVK és mire nem alkalmas önmagában.",
     "worked": "A 25 A/30 mA feliratú hagyományos ÁVK 25 A névleges árama nem jelenti, hogy saját túláramvédelme is van.",
     "real": "Villamos biztonsági ellenőrzéskor az elméleti összefüggést a készülék adataival és a vonatkozó előírásokkal együtt kell értelmezni."
   },
   "os07": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Egy hálózati készülék érinthető fémháza I. érintésvédelmi osztályú. Melyik megoldás alapvető része a hibavédelemnek.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. Az I.",
+    "intro": "A védővezető és a hibavédelem célja, hogy a hozzáférhető vezetőképes részek hibája ne okozhasson veszélyes állapotot.",
+    "hint": "A PE, N és PEN jelölések rendeltetését különböztesd meg.",
     "worked": "Szigetelési hiba miatt egy motor fémvázán veszélyes érintési feszültség jelenhet meg; az előírt hibavédelemhez PE és megfelelő lekapcsolás szükséges.",
     "real": "Villamos biztonsági ellenőrzéskor az elméleti összefüggést a készülék adataival és a vonatkozó előírásokkal együtt kell értelmezni."
   },
   "os08": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Egy háromfázisú transzformátor névleges teljesítménye 6,9 kVA, vonali szekunder feszültsége 400 V. Mekkora a névleges vonali szekunder áram közelítőleg.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. I₂n .",
+    "intro": "A szimmetrikus háromfázisú teljesítményszámításban a vonali mennyiségek és a √3 tényező szerepelnek.",
+    "hint": "Ellenőrizd, hogy a megadott teljesítmény hatásos vagy látszólagos.",
     "worked": "S_n = 13,8 kVA, U_v = 400 V: I_n = 13 800/(√3·400) ≈ 19,9 A.",
     "real": "Gépek telepítése és üzemeltetése közben a névleges adatokat és a tényleges méréseket is össze kell vetni."
   },
   "os09": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Egy áramváltó névleges áttétele 200/5 A. Ha a primer áram 80 A, mekkora az ideális szekunder áram.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. Az áttétel 40:1, így I₂ .",
+    "intro": "Az áramváltó a primer és szekunder áram közt névleges áttételt hoz létre.",
+    "hint": "Az áttétel arányából indulj, és ne keverd össze a primer és szekunder oldalt.",
     "worked": "100/5 A áramváltó áttétele 20:1; 60 A primeráramnál ideálisan 3 A a szekunderáram. A terhelt szekundert nem szabad nyitni.",
     "real": "Gépek telepítése és üzemeltetése közben a névleges adatokat és a tényleges méréseket is össze kell vetni."
   },
   "os10": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Egy 50 Hz-es, négypólusú aszinkronmotor szinkron fordulatszáma mennyi.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. nₛ .",
+    "intro": "Aszinkronmotornál a forgómező fordulatszáma és a tengely tényleges fordulata eltér.",
+    "hint": "Különítsd el a szinkron és a tényleges fordulatszámot; a pólusszámot se keverd a póluspárszámmal.",
     "worked": "Hatpólusú 50 Hz-es motor szinkron fordulata n_s = 120·50/6 = 1000 1/min.",
     "real": "Gépek telepítése és üzemeltetése közben a névleges adatokat és a tényleges méréseket is össze kell vetni."
   },
   "os11": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Egy aszinkronmotor szinkron fordulatszáma 1500 1/min, tényleges fordulatszáma 1440 1/min. Mekkora a szlip.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. s .",
+    "intro": "Aszinkronmotornál a forgómező fordulatszáma és a tengely tényleges fordulata eltér.",
+    "hint": "Különítsd el a szinkron és a tényleges fordulatszámot; a pólusszámot se keverd a póluspárszámmal.",
     "worked": "1000 1/min szinkron és 970 1/min üzemi fordulat esetén a szlip (1000−970)/1000 = 3%.",
     "real": "Gépek telepítése és üzemeltetése közben a névleges adatokat és a tényleges méréseket is össze kell vetni."
   },
   "os12": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Egy háromfázisú motor 400 V vonali feszültségről 10 A vonali áramot vesz fel, cosφ = 0,8. Mekkora a felvett hatásos teljesítmény közelítőleg.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. P .",
+    "intro": "A szimmetrikus háromfázisú teljesítményszámításban a vonali mennyiségek és a √3 tényező szerepelnek.",
+    "hint": "Ellenőrizd, hogy a megadott teljesítmény hatásos vagy látszólagos.",
     "worked": "Háromfázisú 400 V, 5 A, cosφ = 0,9 esetén P = √3·400·5·0,9 ≈ 3,12 kW.",
     "real": "Gépek telepítése és üzemeltetése közben a névleges adatokat és a tényleges méréseket is össze kell vetni."
   },
   "os13": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Egy villamos motor forgásirányát háromfázisú táplálás esetén hogyan lehet megfordítani.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. Két tápláló fázis felcserélése a forgómező irányát megfordítja, ezért a motor forgásiránya.",
+    "intro": "A forgómező irányát a háromfázisú táplálás sorrendje határozza meg.",
+    "hint": "A fázissorrendet vizsgáld; a védővezetőnek nincs szerepe a forgásirány-váltásban.",
     "worked": "Háromfázisú aszinkronmotornál két megfelelő tápláló fázis felcserélése megfordítja a forgómező irányát. Beavatkozás csak biztonságos leválasztás után.",
     "real": "Gépek telepítése és üzemeltetése közben a névleges adatokat és a tényleges méréseket is össze kell vetni."
   },
   "os14": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Háromfázisú, szimmetrikus 400/230 V-os rendszerben melyik feszültség mérhető egy fázis és a nulla között.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. A fázis–nulla feszültség kb.",
+    "intro": "Háromfázisú hálózatban a fázis–nulla és a fázis–fázis feszültség nem azonos.",
+    "hint": "Először döntsd el, hogy fázis–nulla vagy két különböző fázis közötti feszültségről beszélünk.",
     "worked": "Szimmetrikus 400/230 V-os hálózatban L2–N körülbelül 230 V, L2–L3 körülbelül 400 V.",
     "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
   },
   "os15": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Egy 40 m hosszú vezető ellenállása 0,20 Ω. Azonos anyag és keresztmetszet mellett mekkora az ellenállás 80 m hosszúság esetén.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. R .",
+    "intro": "Az egyenletes vezető hossza arányosan befolyásolja a teljes ellenállást vagy reaktanciát.",
+    "hint": "Az egységnyi hosszra megadott értéket a teljes hosszal szorozd.",
     "worked": "Ha 30 m ellenállása 0,15 Ω, azonos keresztmetszettel 90 m ellenállása 0,45 Ω.",
     "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
   },
   "os16": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Egy szimmetrikus háromfázisú fogyasztó hatásos teljesítménye 12 kW, meddő teljesítménye 5 kvar. Mennyi a látszólagos teljesítménye.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. S .",
+    "intro": "A látszólagos teljesítmény a hatásos és meddő teljesítménnyel derékszögű teljesítményháromszöget alkot.",
+    "hint": "P és Q négyzetösszegéből számíts S-t, az egységekre figyelve.",
     "worked": "8 kW hatásos és 6 kvar meddő teljesítménynél S = √(8²+6²) = 10 kVA.",
     "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
   },
   "os17": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Egy 400 V-os háromfázisú hálózaton 20 A folyik, a teljesítménytényező 1. Mennyi a hatásos teljesítmény közelítőleg.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. P .",
+    "intro": "A szimmetrikus háromfázisú teljesítményszámításban a vonali mennyiségek és a √3 tényező szerepelnek.",
+    "hint": "Ellenőrizd, hogy a megadott teljesítmény hatásos vagy látszólagos.",
     "worked": "400 V vonali feszültség, 10 A és cosφ = 1 esetén P = √3·400·10 ≈ 6,93 kW.",
     "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
   },
   "os18": {
-    "intro": "Ebben a feladatban a következő összefüggést kell felismerned: Melyik jelölés utal arra, hogy a többeres kábel tartalmaz zöld-sárga védővezető eret is a 3G2,5 jelölésben.",
-    "hint": "Azonosítsd a keresett mennyiséget, majd a megfelelő összefüggésbe helyettesíts be. A G jelölés azt fejezi ki, hogy a többérű kábel zöld-sárga eret is tartalmaz.",
+    "intro": "A kábelek szabványos érjelölésében a G betű a zöld-sárga eret jelzi.",
+    "hint": "Az erek számát és a névleges keresztmetszetet külön olvasd ki.",
     "worked": "Az 5G1,5 kábel öt eret tartalmaz, köztük zöld-sárgát; egy-egy ér névleges keresztmetszete 1,5 mm².",
     "real": "Villamos biztonsági ellenőrzéskor az elméleti összefüggést a készülék adataival és a vonatkozó előírásokkal együtt kell értelmezni."
   },
