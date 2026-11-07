@@ -50,6 +50,7 @@ header:after{content:"";position:absolute;left:0;right:0;top:0;height:7px;backgr
 <script src="questions-extra.js"></script>
 <script src="questions-practical.js"></script>
 <script src="questions-oktav.js"></script>
+<script src="teaching-materials.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="auth-config.js"></script>
 <script src="auth.js"></script>
@@ -69,6 +70,17 @@ const BANK=[
 {id:"b4",topic:"Villamos biztonságtechnika",q:"Melyik eszköz alkalmas önmagában túláram elleni védelemre megfelelő méretezés esetén?",opts:["ÁVK túláramvédelem nélkül","Kismegszakító","Egyszerű kapcsoló","Jelzőlámpa"],a:1,why:"A kismegszakító túlterhelés és zárlati túláram ellen is véd; a szokásos ÁVK önmagában nem túláramvédelmi eszköz."}
 ];
 BANK.push(...EXTRA_BANK,...PRACTICAL_BANK,...OKTAV_BANK);
+const REQUIRED_LEARNING_FIELDS=["intro","hint","why","worked","real"];
+const incompleteQuestions=[];
+for(let i=BANK.length-1;i>=0;i--){
+ const q=BANK[i], material=TEACHING_MATERIALS[q.id];
+ if(material)Object.assign(q,material);
+ if(!material||REQUIRED_LEARNING_FIELDS.some(field=>typeof q[field]!=="string"||q[field].trim().length<20)){
+   incompleteQuestions.push(q.id);BANK.splice(i,1);
+ }
+}
+if(incompleteQuestions.length)console.error("Hiányzó tananyag miatt kihagyott kérdések:",incompleteQuestions);
+
 const app=document.getElementById("app");
 let state={mode:"home",order:[],cursor:0,answers:{},skipped:[],second:false,deadline:0,timer:null,topic:"Összes témakör"};
 const escaped=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
