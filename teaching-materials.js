@@ -4,223 +4,223 @@ const TEACHING_MATERIALS = {
     "intro": "Ohmos fogyasztónál az áram, a feszültség és az ellenállás közül két ismert mennyiségből kiszámítható a harmadik.",
     "hint": "Figyeld meg, melyik két mennyiség adott, és az Ohm-törvény melyik átrendezése kell.",
     "worked": "Másik eset: U = 48 V, R = 16 Ω. I = 48/16 = 3 A.",
-    "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
+    "real": "Egy 24 V-os vezérlőáramkör fogyasztójának áramát a műszeres mérés előtt így ellenőrizheted."
   },
   "n2": {
     "intro": "Háromfázisú hálózatban a fázis–nulla és a fázis–fázis feszültség nem azonos.",
     "hint": "Először döntsd el, hogy fázis–nulla vagy két különböző fázis közötti feszültségről beszélünk.",
     "worked": "690 V vonali feszültség mellett U_f = 690/√3 ≈ 398,4 V (szimmetrikus csillagrendszer).",
-    "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
+    "real": "Egy háromfázisú elosztóban a 230 V-os fázis–nulla és a 400 V-os fázis–fázis mérési pontok összetévesztése veszélyes."
   },
   "n3": {
     "intro": "Párhuzamos és soros elemeknél az eredő érték a kapcsolás módjától függ.",
     "hint": "Írd fel a kapcsolási módhoz tartozó eredőképletet, ne csak a számokat add össze.",
     "worked": "Két azonos 60 Ω-os párhuzamos ág: 1/R_e = 1/60+1/60, ezért R_e = 30 Ω.",
-    "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
+    "real": "Párhuzamos fűtőágak közös betáplálásán az ágáramok összeadódnak."
   },
   "g1": {
     "intro": "A transzformátor menetszám- és feszültségáttétele megadja a különböző oldalak közti kapcsolatot.",
     "hint": "A primer és szekunder mennyiségeket mindig azonos oldali adatokra vonatkoztasd.",
     "worked": "Ideális transzformátor: 1000 primer és 100 szekunder menet esetén 230 V primerből körülbelül 23 V szekunder feszültség lesz.",
-    "real": "Gépek telepítése és üzemeltetése közben a névleges adatokat és a tényleges méréseket is össze kell vetni."
+    "real": "Az utcai transzformátorállomás középfeszültségből hozza létre a környék kisfeszültségű hálózatát."
   },
   "g2": {
     "intro": "Aszinkronmotornál a forgómező fordulatszáma és a tengely tényleges fordulata eltér.",
     "hint": "Különítsd el a szinkron és a tényleges fordulatszámot; a pólusszámot se keverd a póluspárszámmal.",
     "worked": "Szinkron fordulat 1500 1/min, tényleges 1470 1/min: s = (1500−1470)/1500 = 2%.",
-    "real": "Gépek telepítése és üzemeltetése közben a névleges adatokat és a tényleges méréseket is össze kell vetni."
+    "real": "Motor adattábláján a névleges fordulatszám gyakran kisebb a szinkron fordulatszámnál."
   },
   "g3": {
     "intro": "A villamos teljesítmény a fogyasztás sebességét, az energia pedig az idő alatt elfogyasztott mennyiséget írja le.",
     "hint": "A W és kW közti váltást végezd el, majd az üzemidővel számolj.",
     "worked": "Egy 1,5 kW-os radiátor 4 óra alatt E = 1,5·4 = 6 kWh energiát használ el folyamatos üzemben.",
-    "real": "Gépek telepítése és üzemeltetése közben a névleges adatokat és a tényleges méréseket is össze kell vetni."
+    "real": "Elektromos radiátor fogyasztásának költsége az üzemidő és a kWh egységár alapján becsülhető."
   },
   "b1": {
     "intro": "A védővezető és a hibavédelem célja, hogy a hozzáférhető vezetőképes részek hibája ne okozhasson veszélyes állapotot.",
     "hint": "A PE, N és PEN jelölések rendeltetését különböztesd meg.",
     "worked": "Fémházas, I. érintésvédelmi osztályú mosógépnél a gépház a PE-hez kapcsolódik; normál üzemi áram nem a PE-n folyik.",
-    "real": "Villamos biztonsági ellenőrzéskor az elméleti összefüggést a készülék adataival és a vonatkozó előírásokkal együtt kell értelmezni."
+    "real": "I. osztályú fémházas készüléknél a védővezető-csatlakozás a hibavédelem része."
   },
   "b2": {
     "intro": "Az áram-védőkapcsoló különbözeti áramra reagál, működése eltér a túláramvédelmi eszközétől.",
     "hint": "Gondold végig, mit vizsgál az ÁVK és mire nem alkalmas önmagában.",
     "worked": "Ha a fázison 5,00 A, a nullán 4,97 A folyik, a különbségi áram 0,03 A = 30 mA. Ezt érzékeli az ÁVK.",
-    "real": "Villamos biztonsági ellenőrzéskor az elméleti összefüggést a készülék adataival és a vonatkozó előírásokkal együtt kell értelmezni."
+    "real": "ÁVK hibakereséskor a fázis és nulla közti árameltérésből érthető meg a kioldás oka."
   },
   "b3": {
     "intro": "A védővezető és a hibavédelem célja, hogy a hozzáférhető vezetőképes részek hibája ne okozhasson veszélyes állapotot.",
     "hint": "A PE, N és PEN jelölések rendeltetését különböztesd meg.",
     "worked": "Az L1 fázisvezető, az N nullavezető, a PE védővezető; a PEN egyesített védő- és nullavezető.",
-    "real": "Villamos biztonsági ellenőrzéskor az elméleti összefüggést a készülék adataival és a vonatkozó előírásokkal együtt kell értelmezni."
+    "real": "Villamos terven a PEN és PE eltérő funkciójú vezető; ezek összekeverése hibás bekötéshez vezethet."
   },
   "b4": {
     "intro": "Túlterhelés és zárlat esetén a megfelelő védelmi eszköz és az áramkör összehangolása számít.",
     "hint": "A névleges áram, a tényleges terhelés és a vezeték terhelhetősége együtt fontos.",
     "worked": "B16 kismegszakító megfelelő méretezés esetén túláram ellen véd; hagyományos 30 mA-es ÁVK önmagában nem.",
-    "real": "Villamos biztonsági ellenőrzéskor az elméleti összefüggést a készülék adataival és a vonatkozó előírásokkal együtt kell értelmezni."
+    "real": "Lakáselosztó tervezésekor külön kell meghatározni a túláram- és a maradékáram-védelmet."
   },
   "fz01": {
     "intro": "A transzformátor rövidzárási feszültsége összefügg a helyettesítő impedanciával.",
     "hint": "A százalékértéket váltsd tizedestörtté, és mindig jelöld a vonatkoztatási oldalt.",
     "worked": "U_n = 20 kV, S_n = 4 MVA, u_k = 6%: Z = 0,06·20 000²/4 000 000 = 6 Ω a 20 kV-os oldalra.",
-    "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
+    "real": "Transzformátoros elosztó zárlati szintjének kiszámításához ismerni kell a rövidzárási impedanciát."
   },
   "fz02": {
     "intro": "Két azonos, azonos fázisú impedancia párhuzamos eredője a felére csökken.",
     "hint": "Ha az impedanciák azonosak, az eredő kiszámításához oszd kettővel az egyedi értéket.",
     "worked": "Két azonos, egyenként 4 Ω komplex impedancia párhuzamos eredőjének nagysága 2 Ω.",
-    "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
+    "real": "Párhuzamos transzformátorok együttes zárlati hatását a közös helyettesítő impedancia befolyásolja."
   },
   "fz03": {
     "intro": "A transzformátor menetszám- és feszültségáttétele megadja a különböző oldalak közti kapcsolatot.",
     "hint": "A primer és szekunder mennyiségeket mindig azonos oldali adatokra vonatkoztasd.",
     "worked": "6/0,4 kV áttételnél a = 15; a primerre megadott 9 Ω a szekunderen 9/15² = 0,04 Ω.",
-    "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
+    "real": "Közép- és kisfeszültségi oldali impedanciákat csak azonos oldalra átszámítva szabad összegezni."
   },
   "fz04": {
     "intro": "Két azonos, azonos fázisú impedancia párhuzamos eredője a felére csökken.",
     "hint": "Ha az impedanciák azonosak, az eredő kiszámításához oszd kettővel az egyedi értéket.",
     "worked": "Két azonos, 0,006 Ω-os transzformátorimpedancia párhuzamos eredője 0,003 Ω.",
-    "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
+    "real": "Két azonos párhuzamos transzformátor kisebb eredő impedanciája nagyobb zárlati áramot eredményezhet."
   },
   "fz05": {
     "intro": "A zárlati áram és a védelmi feltételek számításakor fontos a megfelelő egyszerűsített modell.",
     "hint": "Olvasd le a képletben előírt feszültséget, áramot és korrekciós tényezőt.",
     "worked": "400 V-os háromfázisú zárlati modellben Z = 0,04 Ω esetén I = 400/(√3·0,04) ≈ 5774 A.",
-    "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
+    "real": "Egy elosztóban a zárlati áram határozza meg többek között a védelmi eszköz szükséges megszakítóképességét."
   },
   "fz06": {
     "intro": "A zárlati áram és a védelmi feltételek számításakor fontos a megfelelő egyszerűsített modell.",
     "hint": "Olvasd le a képletben előírt feszültséget, áramot és korrekciós tényezőt.",
     "worked": "S_k = 30 MVA és U_v = 10 kV: I_k = 30/(√3·10) ≈ 1,73 kA.",
-    "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
+    "real": "Áramhálózati csatlakozási adatokban megadott zárlati teljesítményből a várható zárlati áram becsülhető."
   },
   "fz07": {
     "intro": "A zárlati áram és a védelmi feltételek számításakor fontos a megfelelő egyszerűsített modell.",
     "hint": "Olvasd le a képletben előírt feszültséget, áramot és korrekciós tényezőt.",
     "worked": "Ha I″ = 5 kA és κ = 1,5, akkor i_p = 1,5·√2·5 ≈ 10,61 kA.",
-    "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
+    "real": "Az áramlökés dinamikus erőhatása a gyűjtősínek és kapcsolók mechanikai méretezésénél fontos."
   },
   "fz08": {
     "intro": "Az egyenletes vezető hossza arányosan befolyásolja a teljes ellenállást vagy reaktanciát.",
     "hint": "Az egységnyi hosszra megadott értéket a teljes hosszal szorozd.",
     "worked": "0,25 Ω/km fajlagos reaktancia és 8 km hossz esetén X = 0,25·8 = 2 Ω.",
-    "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
+    "real": "Több kilométeres kábel reaktanciája része a hálózat összesített zárlati impedanciájának."
   },
   "fz09": {
     "intro": "A transzformátor rövidzárási feszültsége összefügg a helyettesítő impedanciával.",
     "hint": "A százalékértéket váltsd tizedestörtté, és mindig jelöld a vonatkoztatási oldalt.",
     "worked": "Ha u_k 4%-ról 8%-ra emelkedik azonos U_n és S_n mellett, a számított impedancia megduplázódik.",
-    "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
+    "real": "Eltérő rövidzárási feszültségű transzformátorok zárlati tulajdonsága és feszültségesése különbözhet."
   },
   "os01": {
     "intro": "A szigetelésmérés különleges mérési eljárás, nem egyszerű üzemi feszültségmérés.",
     "hint": "A vizsgálófeszültség típusa és a műszer rendeltetése alapján válassz.",
     "worked": "500 V DC vizsgálófeszültségnél 1 MΩ szigetelési ellenálláshoz elméletben 0,5 mA szivárgóáram tartozik. A vizsgálatot előírás szerint végezzük.",
-    "real": "Villamos biztonsági ellenőrzéskor az elméleti összefüggést a készülék adataival és a vonatkozó előírásokkal együtt kell értelmezni."
+    "real": "Szigetelésmérővel feszültségmentesített berendezés szigetelési állapotának vizsgálata történik, előírt eljárás szerint."
   },
   "os02": {
     "intro": "Az áram-védőkapcsoló különbözeti áramra reagál, működése eltér a túláramvédelmi eszközétől.",
     "hint": "Gondold végig, mit vizsgál az ÁVK és mire nem alkalmas önmagában.",
     "worked": "Egy 30 mA-es ÁVK TEST gombja belső próbaáramot idéz elő; a kioldási időt azonban nem méri meg.",
-    "real": "Villamos biztonsági ellenőrzéskor az elméleti összefüggést a készülék adataival és a vonatkozó előírásokkal együtt kell értelmezni."
+    "real": "Az ÁVK TEST gombja használói működési próba; teljes felülvizsgálathoz célműszeres mérés is szükséges."
   },
   "os03": {
     "intro": "A zárlati áram és a védelmi feltételek számításakor fontos a megfelelő egyszerűsített modell.",
     "hint": "Olvasd le a képletben előírt feszültséget, áramot és korrekciós tényezőt.",
     "worked": "U_0 = 230 V, I_a = 100 A: az egyszerűsített határ Z_s,max = 230/100 = 2,3 Ω.",
-    "real": "Villamos biztonsági ellenőrzéskor az elméleti összefüggést a készülék adataival és a vonatkozó előírásokkal együtt kell értelmezni."
+    "real": "TN-rendszerű végáramkör mérési hurokimpedanciáját a lekapcsolási feltételekkel összevetve kell értékelni."
   },
   "os04": {
     "intro": "A zárlati áram és a védelmi feltételek számításakor fontos a megfelelő egyszerűsített modell.",
     "hint": "Olvasd le a képletben előírt feszültséget, áramot és korrekciós tényezőt.",
     "worked": "B16 védelemnél az oktatási 5·I_n feltétellel I_a = 80 A, így Z_s,max = 230/80 = 2,875 Ω.",
-    "real": "Villamos biztonsági ellenőrzéskor az elméleti összefüggést a készülék adataival és a vonatkozó előírásokkal együtt kell értelmezni."
+    "real": "B karakterisztikájú kismegszakítóval védett körökben a kioldóáram és a hurokimpedancia kapcsolata vizsgálandó."
   },
   "os05": {
     "intro": "A védővezető és a hibavédelem célja, hogy a hozzáférhető vezetőképes részek hibája ne okozhasson veszélyes állapotot.",
     "hint": "A PE, N és PEN jelölések rendeltetését különböztesd meg.",
     "worked": "Fémházas I. osztályú gépen a hozzáférhető fémrészeket a PE-hez kapcsolják, hogy az előírt hibavédelmi feltételek teljesüljenek.",
-    "real": "Villamos biztonsági ellenőrzéskor az elméleti összefüggést a készülék adataival és a vonatkozó előírásokkal együtt kell értelmezni."
+    "real": "Fémházas villamos gép PE-vezetője a megfelelően kialakított hibavédelmi rendszer része."
   },
   "os06": {
     "intro": "Az áram-védőkapcsoló különbözeti áramra reagál, működése eltér a túláramvédelmi eszközétől.",
     "hint": "Gondold végig, mit vizsgál az ÁVK és mire nem alkalmas önmagában.",
     "worked": "A 25 A/30 mA feliratú hagyományos ÁVK 25 A névleges árama nem jelenti, hogy saját túláramvédelme is van.",
-    "real": "Villamos biztonsági ellenőrzéskor az elméleti összefüggést a készülék adataival és a vonatkozó előírásokkal együtt kell értelmezni."
+    "real": "A hagyományos ÁVK névleges árama nem jelent önálló zárlat- vagy túlterhelésvédelmi képességet."
   },
   "os07": {
     "intro": "A védővezető és a hibavédelem célja, hogy a hozzáférhető vezetőképes részek hibája ne okozhasson veszélyes állapotot.",
     "hint": "A PE, N és PEN jelölések rendeltetését különböztesd meg.",
     "worked": "Szigetelési hiba miatt egy motor fémvázán veszélyes érintési feszültség jelenhet meg; az előírt hibavédelemhez PE és megfelelő lekapcsolás szükséges.",
-    "real": "Villamos biztonsági ellenőrzéskor az elméleti összefüggést a készülék adataival és a vonatkozó előírásokkal együtt kell értelmezni."
+    "real": "Egy motor vagy mosógép hozzáférhető fémházán fellépő szigetelési hiba megfelelő hibavédelmet igényel."
   },
   "os08": {
     "intro": "A szimmetrikus háromfázisú teljesítményszámításban a vonali mennyiségek és a √3 tényező szerepelnek.",
     "hint": "Ellenőrizd, hogy a megadott teljesítmény hatásos vagy látszólagos.",
     "worked": "S_n = 13,8 kVA, U_v = 400 V: I_n = 13 800/(√3·400) ≈ 19,9 A.",
-    "real": "Gépek telepítése és üzemeltetése közben a névleges adatokat és a tényleges méréseket is össze kell vetni."
+    "real": "Háromfázisú transzformátor szekunder névleges áramából a szükséges csatlakozó szerelvények méretezése indulhat."
   },
   "os09": {
     "intro": "Az áramváltó a primer és szekunder áram közt névleges áttételt hoz létre.",
     "hint": "Az áttétel arányából indulj, és ne keverd össze a primer és szekunder oldalt.",
     "worked": "100/5 A áramváltó áttétele 20:1; 60 A primeráramnál ideálisan 3 A a szekunderáram. A terhelt szekundert nem szabad nyitni.",
-    "real": "Gépek telepítése és üzemeltetése közben a névleges adatokat és a tényleges méréseket is össze kell vetni."
+    "real": "Mérő- vagy védelmi áramváltó áttételét a megfelelő mérési tartományhoz és műszerhez választják."
   },
   "os10": {
     "intro": "Aszinkronmotornál a forgómező fordulatszáma és a tengely tényleges fordulata eltér.",
     "hint": "Különítsd el a szinkron és a tényleges fordulatszámot; a pólusszámot se keverd a póluspárszámmal.",
     "worked": "Hatpólusú 50 Hz-es motor szinkron fordulata n_s = 120·50/6 = 1000 1/min.",
-    "real": "Gépek telepítése és üzemeltetése közben a névleges adatokat és a tényleges méréseket is össze kell vetni."
+    "real": "Négypólusú és hatpólusú aszinkronmotorok szinkron fordulatszáma ugyanazon frekvencián is eltér."
   },
   "os11": {
     "intro": "Aszinkronmotornál a forgómező fordulatszáma és a tengely tényleges fordulata eltér.",
     "hint": "Különítsd el a szinkron és a tényleges fordulatszámot; a pólusszámot se keverd a póluspárszámmal.",
     "worked": "1000 1/min szinkron és 970 1/min üzemi fordulat esetén a szlip (1000−970)/1000 = 3%.",
-    "real": "Gépek telepítése és üzemeltetése közben a névleges adatokat és a tényleges méréseket is össze kell vetni."
+    "real": "Terhelésváltozáskor az aszinkronmotor fordulatszáma és ezzel a szlipje is változhat."
   },
   "os12": {
     "intro": "A szimmetrikus háromfázisú teljesítményszámításban a vonali mennyiségek és a √3 tényező szerepelnek.",
     "hint": "Ellenőrizd, hogy a megadott teljesítmény hatásos vagy látszólagos.",
     "worked": "Háromfázisú 400 V, 5 A, cosφ = 0,9 esetén P = √3·400·5·0,9 ≈ 3,12 kW.",
-    "real": "Gépek telepítése és üzemeltetése közben a névleges adatokat és a tényleges méréseket is össze kell vetni."
+    "real": "Motor villamos bemenő teljesítményének becslése segíti a terhelésfelmérést és az energiaigény számítását."
   },
   "os13": {
     "intro": "A forgómező irányát a háromfázisú táplálás sorrendje határozza meg.",
     "hint": "A fázissorrendet vizsgáld; a védővezetőnek nincs szerepe a forgásirány-váltásban.",
     "worked": "Háromfázisú aszinkronmotornál két megfelelő tápláló fázis felcserélése megfordítja a forgómező irányát. Beavatkozás csak biztonságos leválasztás után.",
-    "real": "Gépek telepítése és üzemeltetése közben a névleges adatokat és a tényleges méréseket is össze kell vetni."
+    "real": "Szivattyúk és ventilátorok üzembe helyezésekor a helyes motorforgásirányt ellenőrizni kell."
   },
   "os14": {
     "intro": "Háromfázisú hálózatban a fázis–nulla és a fázis–fázis feszültség nem azonos.",
     "hint": "Először döntsd el, hogy fázis–nulla vagy két különböző fázis közötti feszültségről beszélünk.",
     "worked": "Szimmetrikus 400/230 V-os hálózatban L2–N körülbelül 230 V, L2–L3 körülbelül 400 V.",
-    "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
+    "real": "230 V-os aljzat hibás bekötésekor két különböző fázis között 400 V jelenhet meg és károsíthatja a fogyasztót."
   },
   "os15": {
     "intro": "Az egyenletes vezető hossza arányosan befolyásolja a teljes ellenállást vagy reaktanciát.",
     "hint": "Az egységnyi hosszra megadott értéket a teljes hosszal szorozd.",
     "worked": "Ha 30 m ellenállása 0,15 Ω, azonos keresztmetszettel 90 m ellenállása 0,45 Ω.",
-    "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
+    "real": "Hosszabb kábel nagyobb ellenállást és feszültségesést jelenthet ugyanazon áram mellett."
   },
   "os16": {
     "intro": "A látszólagos teljesítmény a hatásos és meddő teljesítménnyel derékszögű teljesítményháromszöget alkot.",
     "hint": "P és Q négyzetösszegéből számíts S-t, az egységekre figyelve.",
     "worked": "8 kW hatásos és 6 kvar meddő teljesítménynél S = √(8²+6²) = 10 kVA.",
-    "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
+    "real": "A villamos berendezések teljesítménytényezője a hálózat látszólagos terhelését is befolyásolja."
   },
   "os17": {
     "intro": "A szimmetrikus háromfázisú teljesítményszámításban a vonali mennyiségek és a √3 tényező szerepelnek.",
     "hint": "Ellenőrizd, hogy a megadott teljesítmény hatásos vagy látszólagos.",
     "worked": "400 V vonali feszültség, 10 A és cosφ = 1 esetén P = √3·400·10 ≈ 6,93 kW.",
-    "real": "Villamos áramkörök mérésénél és méretezésénél segít eligazodni a különböző mennyiségek között."
+    "real": "Háromfázisú ellenállásos fűtőberendezés névleges teljesítményének számításánál szerepel a √3 tényező."
   },
   "os18": {
     "intro": "A kábelek szabványos érjelölésében a G betű a zöld-sárga eret jelzi.",
     "hint": "Az erek számát és a névleges keresztmetszetet külön olvasd ki.",
     "worked": "Az 5G1,5 kábel öt eret tartalmaz, köztük zöld-sárgát; egy-egy ér névleges keresztmetszete 1,5 mm².",
-    "real": "Villamos biztonsági ellenőrzéskor az elméleti összefüggést a készülék adataival és a vonatkozó előírásokkal együtt kell értelmezni."
+    "real": "Kábel kiválasztásakor a G jelölés segít megállapítani, hogy az erek között van-e zöld-sárga védővezető."
   },
   "p01": {
     "intro": "Ha tudod a teljesítményt és a feszültséget, kiszámolhatod, mekkora árammal terheli a készülék az áramkört.",
