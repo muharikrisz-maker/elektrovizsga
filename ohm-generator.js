@@ -58,14 +58,19 @@
     }
     throw Error("Most nem sikerült új, korábban nem látott feladatot találni. Próbáld újra.");
   }
-  async function submit(q,selected){
+  async function submit(q,rawAnswer){
     const user=window.ElektroAuth?.getUser();
     if(!user)throw Error("A mentéshez jelentkezz be.");
-    const {error}=await window.ElektroAuth.getClient().from("generated_questions")
-      .update({selected_answer:selected,answered_at:new Date().toISOString()})
-      .eq("id",q.id).eq("user_id",user.id).is("answered_at",null);
+    const trimmed=String(rawAnswer||"").trim();
+    const parsed=Number(trimmed.replace(/\\s/g,"").replace(",","."));
+    if(!trimmed||!Number.isFinite(parsed))throw Error("Érvényes számot adj meg.");
+    const correct=Math.abs(parsed-q.answer)<=Math.max(0.011,Math.abs(q.answer)*0.001);
+    const {data,error}=await window.ElektroAuth.getClient().from("generated_questions")
+      .update({answer_text:trimmed,is_correct:correct,answered_at:new Date().toISOString()})
+      .eq("id",q.id).eq("user_id",user.id).is("answered_at",null).select("id").maybeSingle();
     if(error)throw Error("A válasz mentése nem sikerült: "+error.message);
-    return {correct:selected===q.a,why:q.why};
+    if(!data)throw Error("Ezt a feladatot már megválaszoltad.");
+    return {correct,why:q.why};
   }
   window.ElektroGenerator={next,submit};
 })();
