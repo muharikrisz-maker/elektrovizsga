@@ -135,11 +135,73 @@ function launchStudy(mode,level=0,topic="Összes témakör"){
 function studyHome(){
  stopTimer();state.mode="study-home";
  const topics=[...new Set(BANK.map(q=>q.topic))];
- app.innerHTML='<section class="panel"><span class="pill">Tanulási segéd</span><h1>Tanulj a saját tempódban</h1><p class="muted">A gyakorlás nem időre megy: minden válasz után részletes magyarázatot és életszerű példát kapsz. A vizsgamód továbbra is külön, 20 kérdéssel és 45 perccel működik.</p><label for="studyTopic">Témakör</label><select id="studyTopic"><option>Összes témakör</option>'+topics.map(t=>'<option>'+escaped(t)+'</option>').join('')+'</select><div class="study-cards">'+STUDY_LEVELS.map((l,i)=>'<div class="study-card"><span class="pill">'+(i+1)+'. szint</span><h2>'+escaped(l.name)+'</h2><p class="muted">'+escaped(l.description)+'</p><button class="button secondary" data-study-level="'+i+'">Gyakorlás ezen a szinten</button></div>').join('')+'</div><div class="lesson-example"><h2>Fokozatos tanulási út</h2><p>Az első 5 kérdés kezdő, a következő 5 középhaladó, az utolsó 5 pedig haladó. Így egyre nehezebb feladatok várnak rád.</p><button class="button" id="studyPath">Kezdem a fokozatos tanulást</button></div><div class="actions"><button class="button secondary" id="studyBack">Vissza a kezdőlapra</button></div></section>';
+ app.innerHTML='<section class="panel"><span class="pill">Tanulási segéd</span><h1>Tanulj a saját tempódban</h1><p class="muted">A gyakorlás nem időre megy: minden válasz után részletes magyarázatot és életszerű példát kapsz. A vizsgamód továbbra is külön, 20 kérdéssel és 45 perccel működik.</p><label for="studyTopic">Témakör</label><select id="studyTopic"><option>Összes témakör</option>'+topics.map(t=>'<option>'+escaped(t)+'</option>').join('')+'</select><div class="study-cards">'+STUDY_LEVELS.map((l,i)=>'<div class="study-card"><span class="pill">'+(i+1)+'. szint</span><h2>'+escaped(l.name)+'</h2><p class="muted">'+escaped(l.description)+'</p><button class="button secondary" data-study-level="'+i+'">Gyakorlás ezen a szinten</button></div>').join('')+'</div><div class="lesson-example"><h2>Személyes AI-tanár · Ohm-törvény</h2><p>Magánóra a korábbi eredményeid alapján: szabadon kérdezhetsz, az AI lépésről lépésre magyaráz és önálló megoldásra ösztönöz.</p><button class="button" id="openTeacher">AI-tanárom megnyitása</button></div><div class="lesson-example"><h2>Fokozatos tanulási út</h2><p>Az első 5 kérdés kezdő, a következő 5 középhaladó, az utolsó 5 pedig haladó. Így egyre nehezebb feladatok várnak rád.</p><button class="button" id="studyPath">Kezdem a fokozatos tanulást</button></div><div class="actions"><button class="button secondary" id="studyBack">Vissza a kezdőlapra</button></div></section>';
  document.querySelectorAll("[data-study-level]").forEach(b=>b.onclick=()=>launchStudy("level",Number(b.dataset.studyLevel),document.getElementById("studyTopic").value));
+ document.getElementById("openTeacher").onclick=showAiTeacher;
  document.getElementById("studyPath").onclick=()=>launchStudy("path",0,document.getElementById("studyTopic").value);
  document.getElementById("studyBack").onclick=home;
 }
+
+async function showAiTeacher(){
+ stopTimer();
+ state.mode="ai-teacher";
+ const user=window.ElektroAuth?.getUser();
+ if(!user){
+   app.innerHTML='<section class="panel"><span class="pill">Tanulószoba</span><h1>AI-tanár</h1><p>A személyes tanuláshoz jelentkezz be, hogy a korábbi eredményeid alapján folytathassuk az órát.</p><div class="actions"><button class="button" id="teacherLogin">Belépés</button><button class="button secondary" id="teacherBack">Vissza</button></div></section>';
+   document.getElementById("teacherLogin").onclick=showLogin;
+   document.getElementById("teacherBack").onclick=studyHome;
+   return;
+ }
+ app.innerHTML='<section class="panel"><span class="pill">Tanulószoba · személyes AI-tanár</span><h1>Ohm-törvény · magánóra</h1><p class="muted">Kérdezz, számolj és indokold meg a válaszaidat! A tanár figyelembe veszi a korábbi feladataid eredményeit. A segítséggel megoldott feladat nem azonos az önállóan megoldottal.</p><div id="teacherHistory" aria-live="polite" style="display:flex;flex-direction:column;gap:12px;margin:20px 0"></div><p class="muted small" id="teacherStatus" role="status">Korábbi beszélgetés betöltése…</p><form id="teacherForm"><label for="teacherMessage">Üzeneted vagy számításod</label><textarea id="teacherMessage" rows="3" maxlength="1500" class="auth-input" style="max-width:100%;resize:vertical" placeholder="Például: Magyarázd el az Ohm-törvényt egy hétköznapi példával!" required></textarea><div class="actions"><button class="button" type="submit" id="teacherSend">Küldés</button><button class="button secondary" type="button" id="teacherBack">Vissza</button></div></form></section>';
+ document.getElementById("teacherBack").onclick=studyHome;
+ const historyEl=document.getElementById("teacherHistory");
+ const status=document.getElementById("teacherStatus");
+ function bubble(role,content){
+   const div=document.createElement("div");
+   div.className="lesson-card";
+   div.style.background=role==="user"?"#fff8e9":"#f9faf8";
+   const label=document.createElement("strong");
+   label.textContent=role==="user"?"Te":"AI-tanár";
+   const body=document.createElement("p");
+   body.style.whiteSpace="pre-wrap";body.style.marginBottom="0";body.textContent=content;
+   div.append(label,body);historyEl.appendChild(div);
+ }
+ try {
+   const c=window.ElektroAuth.getClient();
+   const {data,error}=await c.from("teacher_messages").select("role,content,created_at")
+     .eq("user_id",user.id).order("created_at",{ascending:false}).limit(30);
+   if(error)throw error;
+   if(state.mode!=="ai-teacher")return;
+   for(const row of (data||[]).reverse())bubble(row.role,row.content);
+   status.textContent=(data||[]).length?"Folytathatod a legutóbbi órát.":"Kezdhetjük az első magánórát! Írd meg, mit szeretnél átvenni.";
+ }catch(err){if(state.mode==="ai-teacher")status.textContent="Korábbi beszélgetés betöltése sikertelen: "+err.message}
+ document.getElementById("teacherForm").onsubmit=async ev=>{
+   ev.preventDefault();
+   const input=document.getElementById("teacherMessage");
+   const message=input.value.trim();
+   if(!message)return;
+   const button=document.getElementById("teacherSend");
+   button.disabled=true;input.disabled=true;
+   status.textContent="Az AI-tanár válaszol…";
+   try{
+     const c=window.ElektroAuth.getClient();
+     const {data,error}=await c.functions.invoke("ai-teacher",{body:{message}});
+     if(error){
+       let detail=error.message;
+       try{const body=await error.context?.json();if(body?.error)detail=body.error}catch{}
+       throw Error(detail);
+     }
+     if(data?.error)throw Error(data.error);
+     if(typeof data?.answer!=="string")throw Error("Nem érkezett értelmezhető válasz.");
+     if(state.mode!=="ai-teacher")return;
+     bubble("user",message);bubble("assistant",data.answer);
+     input.value="";
+     status.textContent="A beszélgetésed mentve. A következő kérdésedet is felteheted.";
+   }catch(err){if(state.mode==="ai-teacher")status.textContent="Az üzenetet nem sikerült elküldeni: "+err.message}
+   finally{if(state.mode==="ai-teacher"){button.disabled=false;input.disabled=false;input.focus()}}
+ };
+}
+
 function studyLevelOf(q){const index=STUDY_LEVELS.findIndex(l=>l.ids.includes(q.id));return index>=0?index:0}
 function renderStudy(){
  if(!study)return studyHome();state.mode="study";
