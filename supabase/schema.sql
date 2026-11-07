@@ -26,3 +26,9 @@ alter table public.learner_profiles enable row level security;
 create policy "Learners can view own profile" on public.learner_profiles for select to authenticated using ((select auth.uid())=user_id);
 create policy "Learners can insert own profile" on public.learner_profiles for insert to authenticated with check ((select auth.uid())=user_id);
 create policy "Learners can update own username" on public.learner_profiles for update to authenticated using ((select auth.uid())=user_id) with check ((select auth.uid())=user_id);
+
+-- API privileges: row access is still restricted by the RLS policies above.
+revoke all on table public.exam_attempts from anon, authenticated;
+revoke all on table public.learner_profiles from anon, authenticated;
+grant select, insert on public.exam_attempts to authenticated;
+grant select, insert, update(username) on public.learner_profiles to authenticated;
