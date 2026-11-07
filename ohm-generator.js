@@ -127,7 +127,7 @@ async function next(){
   const type=chooseType([...recentSession,...recently]);
   const question=createQuestion(type);
   const {data,error}=await client.from("generated_questions")
-   .insert({user_id:user.id,signature:question.signature,topic:"Ohm-törvény és alkalmazásai",question})
+   .insert({user_id:user.id,signature:question.signature,topic:"Ohm-törvény",question})
    .select("id").single();
   if(!error){recentSession.unshift(type);if(recentSession.length>8)recentSession.pop();return {...question,id:data.id};}
   if(error.code==="23505")continue;
