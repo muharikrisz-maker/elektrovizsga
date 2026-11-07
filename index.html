@@ -152,8 +152,23 @@ async function showAiTeacher(){
    document.getElementById("teacherBack").onclick=studyHome;
    return;
  }
- app.innerHTML='<section class="panel"><span class="pill">Tanulószoba · személyes AI-tanár</span><h1>Ohm-törvény · magánóra</h1><p class="muted">Kérdezz, számolj és indokold meg a válaszaidat! A tanár figyelembe veszi a korábbi feladataid eredményeit. A segítséggel megoldott feladat nem azonos az önállóan megoldottal.</p><div id="teacherHistory" aria-live="polite" style="display:flex;flex-direction:column;gap:12px;margin:20px 0"></div><p class="muted small" id="teacherStatus" role="status">Korábbi beszélgetés betöltése…</p><form id="teacherForm"><label for="teacherMessage">Üzeneted vagy számításod</label><textarea id="teacherMessage" rows="3" maxlength="1500" class="auth-input" style="max-width:100%;resize:vertical" placeholder="Például: Magyarázd el az Ohm-törvényt egy hétköznapi példával!" required></textarea><div class="actions"><button class="button" type="submit" id="teacherSend">Küldés</button><button class="button secondary" type="button" id="teacherBack">Vissza</button></div></form></section>';
+ app.innerHTML='<section class="panel"><span class="pill">Tanulószoba · személyes AI-tanár</span><h1>Ohm-törvény · magánóra</h1><p class="muted">Kérdezz, számolj és indokold meg a válaszaidat! A tanár figyelembe veszi a korábbi feladataid eredményeit. A segítséggel megoldott feladat nem azonos az önállóan megoldottal.</p><p id="teacherUsage" class="muted small">Utolsó 7 nap tokenhasználata: betöltés…</p><div id="teacherHistory" aria-live="polite" style="display:flex;flex-direction:column;gap:12px;margin:20px 0"></div><p class="muted small" id="teacherStatus" role="status">Korábbi beszélgetés betöltése…</p><form id="teacherForm"><label for="teacherMessage">Üzeneted vagy számításod</label><textarea id="teacherMessage" rows="3" maxlength="1500" class="auth-input" style="max-width:100%;resize:vertical" placeholder="Például: Magyarázd el az Ohm-törvényt egy hétköznapi példával!" required></textarea><div class="actions"><button class="button" type="submit" id="teacherSend">Küldés</button><button class="button secondary" type="button" id="teacherBack">Vissza</button></div></form></section>';
  document.getElementById("teacherBack").onclick=studyHome;
+ async function refreshTeacherUsage(){
+   const usageEl=document.getElementById("teacherUsage");
+   const since=new Date(Date.now()-7*24*60*60*1000).toISOString();
+   const {data,error}=await window.ElektroAuth.getClient()
+      .from("ai_usage_events").select("input_tokens,output_tokens,total_tokens,model")
+      .eq("user_id",user.id).gte("created_at",since).limit(10000);
+   if(state.mode!=="ai-teacher")return;
+   if(error){usageEl.textContent="A tokenstatisztika most nem érhető el.";return}
+   const input=(data||[]).reduce((n,r)=>n+r.input_tokens,0);
+   const output=(data||[]).reduce((n,r)=>n+r.output_tokens,0);
+   const total=(data||[]).reduce((n,r)=>n+r.total_tokens,0);
+   const fmt=n=>new Intl.NumberFormat("hu-HU").format(n);
+   usageEl.textContent="Utolsó 7 nap · "+(data||[]).length+" AI-válasz · bemenet: "+fmt(input)+" token · kimenet: "+fmt(output)+" token · összesen: "+fmt(total)+" token.";
+ }
+ refreshTeacherUsage().catch(()=>{if(state.mode==="ai-teacher")document.getElementById("teacherUsage").textContent="A tokenstatisztika most nem érhető el."});
  const historyEl=document.getElementById("teacherHistory");
  const status=document.getElementById("teacherStatus");
  function bubble(role,content){
@@ -197,6 +212,7 @@ async function showAiTeacher(){
      bubble("user",message);bubble("assistant",data.answer);
      input.value="";
      status.textContent="A beszélgetésed mentve. A következő kérdésedet is felteheted.";
+     refreshTeacherUsage().catch(()=>{});
    }catch(err){if(state.mode==="ai-teacher")status.textContent="Az üzenetet nem sikerült elküldeni: "+err.message}
    finally{if(state.mode==="ai-teacher"){button.disabled=false;input.disabled=false;input.focus()}}
  };
