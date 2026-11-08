@@ -6,10 +6,14 @@ const fmt=(n,d=2)=>new Intl.NumberFormat("hu-HU",{maximumFractionDigits:d}).form
 const num=(n,d=2)=>Number(n.toFixed(d));
 function task(base,question,value,unit,formula,alternatives,scenario){
  const answer=fmt(value)+(unit?" "+unit:"");
- const opts=[answer,...alternatives.map(x=>fmt(x)+(unit?" "+unit:""))].filter((x,i,a)=>a.indexOf(x)===i);
- if(opts.length!==4)throw Error("Duplicate options: "+base.id);
+ const opts=[answer];
+ for(const x of [...alternatives,value*1.25,value*.75,value+3,value+7,value*3]){
+  const item=fmt(x)+(unit?" "+unit:"");if(!opts.includes(item))opts.push(item);
+  if(opts.length===4)break;
+ }
+ if(opts.length!==4)throw Error("Could not form four options: "+base.id);
  const shuffled=[...opts].sort(()=>Math.random()-.5);
- return {...base,q:question,opts:shuffled,a:shuffled.indexOf(answer),why:formula,scenario:scenario||base.scenario};
+ return {...base,q:question,opts:shuffled,a:shuffled.indexOf(answer),why:formula,scenario:scenario||(/\\d/.test(base.scenario||"")?"Villanyszerelőként megbízást kapsz egy berendezés vagy áramkör műszaki felmérésére. A megadott adatokból számítod ki a szükséges villamos mennyiséget.":base.scenario)};
 }
 const f={
 n1:b=>{const u=pick([24,48,120,230]),i=pick([2,3,4,5,8]);const r=u/i;return task(b,"Egy "+fmt(u)+" V feszültségre kapcsolt, "+fmt(r)+" Ω ellenállású fogyasztón mekkora áram folyik?",i,"A","I = U/R = "+fmt(u)+"/"+fmt(r)+" = "+fmt(i)+" A.",[i*2,i/2,i+2]);},
