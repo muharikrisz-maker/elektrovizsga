@@ -330,7 +330,7 @@ function renderStudy(){
  if(answered)document.getElementById("studyNext").onclick=()=>{study.cursor++;renderStudy()};
  document.getElementById("studyLeave").onclick=()=>{if(confirm("Biztosan megszakítod a gyakorlást?"))studyHome()};
 }
-function finishStudy(){
+function finishStudy(skipSave=false){
  state.mode="study-results";
  const selected=study.questions;
  const score=selected.filter(q=>study.answers[q.id]===q.a).length;
@@ -338,11 +338,41 @@ function finishStudy(){
  const percent=Math.round(100*score/selected.length);
  const recomm=missed.length?missed.reduce((m,q)=>{const k=q.learningTopic;m[k]=(m[k]||0)+1;return m},{}):{};
  const sorted=Object.entries(recomm).sort((a,b)=>b[1]-a[1]);
- app.innerHTML='<section class="panel"><span class="pill">Tanulási kör lezárva</span><h1>'+score+' / '+selected.length+' jó válasz · '+percent+'%</h1><p class="muted">'+(percent>=80?'Szép eredmény! Megpróbálhatsz egy nehezebb szintet.':'Érdemes ismételni azokat a témákat, ahol hibáztál. A magyarázatokból már láthatod, mire kell figyelni.')+'</p>'+(missed.length?'<h2>Amit érdemes újra megnézned</h2>'+sorted.map(([k,n])=>'<p><strong>'+escaped(EXAM_FRAMEWORK.topics.find(t=>t.id===k)?.title||k)+'</strong> · '+n+' hibás válasz</p>').join(''):'<h2>Minden kérdés sikerült!</h2>')+'<p id="studySaveStatus" class="muted small">'+(window.ElektroAuth?.getUser()?'Mentés folyamatban…':'Vendégként ezt a gyakorlást nem mentjük el.')+'</p><div class="actions"><button class="button" id="studyRetry">Új gyakorlás</button><button class="button secondary" id="studyHome">Szintválasztás</button>'+(study.mode==="level"&&study.level<2&&percent>=80?'<button class="button secondary" id="studyAdvance">Következő szint</button>':'')+'</div></section>';
- document.getElementById("studyRetry").onclick=()=>study.mode==="section"?launchSectionPractice(study.topic):study.mode==="topic"?launchTopicPractice(study.topic):launchStudy(study.mode,study.level,study.topic);
+ app.innerHTML='<section class="panel"><span class="pill">Tanulási kör lezárva</span><h1>'+score+' / '+selected.length+' jó válasz · '+percent+'%</h1><p class="muted">'+(percent>=80?'Szép eredmény! Megpróbálhatsz egy nehezebb szintet.':'Érdemes ismételni azokat a témákat, ahol hibáztál. A magyarázatokból már láthatod, mire kell figyelni.')+'</p>'+(missed.length?'<h2>Amit érdemes újra megnézned</h2>'+sorted.map(([k,n])=>'<p><strong>'+escaped(EXAM_FRAMEWORK.topics.find(t=>t.id===k)?.title||k)+'</strong> · '+n+' hibás válasz</p>').join(''):'<h2>Minden kérdés sikerült!</h2>')+'<h2>Elrontott feladatok – részletes tanulás</h2>'+(missed.length?missed.map(q=>'<div class="answer"><p><strong>'+escaped(q.q)+'</strong></p><p class="muted small">'+escaped(EXAM_FRAMEWORK.topics.find(t=>t.id===q.learningTopic)?.title||q.topic)+'</p><button class="button secondary" data-deep-study="'+escaped(q.id)+'">Tananyag és célzott gyakorlás</button></div>').join(''):'<p class="muted">Most nem volt hibás feladat.</p>')+'<p id="studySaveStatus" class="muted small">'+(window.ElektroAuth?.getUser()?'Mentés folyamatban…':'Vendégként ezt a gyakorlást nem mentjük el.')+'</p><div class="actions"><button class="button" id="studyRetry">Új gyakorlás</button><button class="button secondary" id="studyHome">Szintválasztás</button>'+(study.mode==="level"&&study.level<2&&percent>=80?'<button class="button secondary" id="studyAdvance">Következő szint</button>':'')+'</div></section>';
+ document.querySelectorAll("[data-deep-study]").forEach(b=>b.onclick=()=>showDeepStudy(b.dataset.deepStudy));
+ document.getElementById("studyRetry").onclick=()=>study.mode==="repeat-calculation"?launchRepeatedCalculation(study.topic):study.mode==="calculation-topic"?launchCalculationTopic(study.topic):study.mode==="section"?launchSectionPractice(study.topic):study.mode==="topic"?launchTopicPractice(study.topic):launchStudy(study.mode,study.level,study.topic);
  document.getElementById("studyHome").onclick=studyHome;
  const advance=document.getElementById("studyAdvance");if(advance)advance.onclick=()=>launchStudy("level",study.level+1,study.topic);
- if(window.ElektroAuth?.getUser())window.ElektroAuth.saveAttempt({score,total:selected.length,topic:"Tanulás: "+(study.mode==="path"?"Fokozatos":STUDY_LEVELS[study.level].name)+" / "+study.topic,answers:{...study.answers}}).then(()=>{const el=document.getElementById("studySaveStatus");if(el)el.textContent="A tanulási kör mentve a fiókodba."}).catch(e=>{const el=document.getElementById("studySaveStatus");if(el)el.textContent="Mentési hiba: "+e.message});
+ if(!skipSave&&window.ElektroAuth?.getUser())window.ElektroAuth.saveAttempt({score,total:selected.length,topic:"Tanulás: "+(study.mode==="path"?"Fokozatos":STUDY_LEVELS[study.level].name)+" / "+study.topic,answers:{...study.answers}}).then(()=>{const el=document.getElementById("studySaveStatus");if(el)el.textContent="A tanulási kör mentve a fiókodba."}).catch(e=>{const el=document.getElementById("studySaveStatus");if(el)el.textContent="Mentési hiba: "+e.message});
+}
+
+
+function calculationNotes(q){
+ if(q.learningTopic==="reactance"){
+  return '<div class="lesson-example"><h2>1. Az összefüggés megértése</h2><p>A tekercs induktív reaktanciája a frekvenciával és az induktivitással arányos. Jele <strong>X_L</strong>, mértékegysége Ω.</p><p><strong>Alapképlet:</strong> X_L = 2 · π · f · L</p><p><strong>Frekvenciára átrendezve:</strong> f = X_L / (2 · π · L)</p><p>Ha az induktivitást millihenryben (mH) kapod, a számításhoz váltsd henryre: 1000 mH = 1 H.</p><h2>2. Számoljuk ki lépésenként</h2><p>Az adatok: L = 0,4 H, X_L = 150,8 Ω. A keresett mennyiség a frekvencia.</p><p><strong>1. lépés:</strong> 2 · π · L = 2 · 3,1416 · 0,4 ≈ 2,5133</p><p><strong>2. lépés:</strong> f = 150,8 / 2,5133 ≈ <strong>60 Hz</strong>.</p><p><strong>Ellenőrzés:</strong> a kapott 60 Hz-et visszahelyettesítve X_L = 2 · π · 60 · 0,4 ≈ 150,8 Ω. Tehát az eredmény összhangban van a megadott adattal.</p><h2>3. Hogyan gondolkodj a feladatról?</h2><p>Mindig előbb azonosítsd, hogy frekvenciát (Hz), reaktanciát (Ω) vagy induktivitást (H) keresel. Ugyanazt az alapképletet kell a keresett mennyiségre átrendezni.</p><p><strong>Szakmai helyzet:</strong> frekvenciaváltóval táplált tekercses berendezés vizsgálatakor a frekvencia változása az induktív reaktanciát is módosítja.</p></div>';
+ }
+ return '<div class="lesson-example"><h2>A számítás menete</h2><p><strong>1.</strong> Írd ki az ismert adatokat és mértékegységeket.</p><p><strong>2.</strong> A témakör összefüggéséből fejezd ki a keresett mennyiséget.</p><p><strong>3.</strong> Helyettesíts be, számolj, és ellenőrizd a mértékegységet.</p><p><strong>Az előző feladat megoldása:</strong> '+escaped(q.why)+'</p><p><strong>Új példa:</strong> '+escaped(q.worked||"")+'</p></div>';
+}
+function showDeepStudy(questionId){
+ const q=study?.questions.find(item=>item.id===questionId);
+ if(!q)return finishStudy(true);
+ stopTimer();state.mode="study-deep";
+ const t=learningTopicOf(q),supported=window.ElektroVariations?.supportedIds.includes(q.baseId||q.id);
+ app.innerHTML='<section class="panel"><span class="pill">Tanulási segéd · elmélyülés</span><h1>'+escaped(t?.title||q.topic)+'</h1><p class="muted">'+escaped(t?.intro||q.intro||"")+'</p><h2>A feladat, amivel elakadtál</h2><p><strong>'+escaped(q.q)+'</strong></p><p>Helyes válasz: <strong>'+escaped(q.opts[q.a])+'</strong></p><p>'+escaped(q.why)+'</p>'+calculationNotes(q)+'<div class="actions">'+(supported?'<button class="button" id="deepRepeat">10 új számolás ebből a feladattípusból</button>':'')+'<button class="button secondary" id="deepTopic">Gyakorlás a teljes altémakörből</button><button class="button secondary" id="deepBack">Vissza a kiértékeléshez</button></div></section>';
+ const repeat=document.getElementById("deepRepeat");if(repeat)repeat.onclick=()=>launchRepeatedCalculation(q.baseId||q.id);
+ document.getElementById("deepTopic").onclick=()=>launchTopicPractice(q.learningTopic);
+ document.getElementById("deepBack").onclick=()=>finishStudy(true);
+}
+function launchRepeatedCalculation(questionId){
+ const base=BANK.find(q=>q.id===questionId);
+ if(!base||!window.ElektroVariations?.supportedIds.includes(questionId))return studyHome();
+ const questions=Array.from({length:10},(_,i)=>({
+  ...window.ElektroVariations.vary(base),
+  id:questionId+"-deep-"+i,
+  baseId:questionId
+ }));
+ study={mode:"repeat-calculation",level:0,topic:questionId,questions,cursor:0,answers:{},optionOrders:{},reviewed:false};
+ state.mode="study";renderStudy();
 }
 
 const studyConcepts={
