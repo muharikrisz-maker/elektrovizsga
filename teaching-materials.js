@@ -264,7 +264,7 @@ const TEACHING_MATERIALS = {
     "hint": "Az I = P/U képletet használd, a wattot oszd volttal.",
     "worked": "Egy 920 W-os ohmos készülék 230 V-on I = 920/230 = 4 A-t vesz fel.",
     "real": "Háztartási készülékek terhelésének becslése; a tényleges áram a készülék üzemétől függ.",
-    "scenario": "Egy ügyfél új vízforralót és egyéb konyhai gépeket használna ugyanazon az áramkörön. A várható áramot becsülöd."
+    "scenario": "Villanyszerelőként megbízást kapsz egy konyha villamos hálózatának felújítására. A megrendelő új konyhai készülékeket is használna, köztük egy 230 V-os, 1150 W-os vízforralót. Az áramkörök terhelésének felmérésekor meg kell határoznod a vízforraló névleges áramfelvételét."
   },
   "p02": {
     "intro": "Párhuzamos ágaknál az áramok a közös betápláló vezetéken összeadódnak.",
