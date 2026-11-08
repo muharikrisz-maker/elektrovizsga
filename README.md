@@ -46,3 +46,7 @@ A `main` ágon lévő `index.html` a GitHub Pages belépési pontja; a `question
 ## Tananyag-követelmény új kérdésekhez
 
 A kérdésbank minden eleméhez kötelező: `why` (a konkrét válasz levezetése), valamint a `teaching-materials.js` fájlban `intro` (rövid fogalmi bevezetés), `hint` (megoldás előtti segítség), `worked` (más számokkal készített, az adott kérdéshez kapcsolódó kidolgozott példa) és `real` (valós felhasználás). A tanulásban a feladathoz rendelt saját példát használjuk; nem veszünk elő más témájú tanítócsomagot. A kötelező mezők nélküli kérdést a kliens kihagyja és konzolhibát jelez. Új kérdés hozzáadásakor mind az öt részt ki kell dolgozni és ellenőrizni.
+
+## Témakörök és feladatok összekapcsolása
+
+A `topic-catalog.js` témakörönként tartalmazza az azonosítót, címet, tananyagot, egy szemléltető példát és a hozzá tartozó `questionIds` listát. A jelenlegi 73 kérdés 19 tanulási témakörbe került. Az új feladatot egy megfelelő témakör `questionIds` listájához kell társítani; meglévő tananyaga újrahasznosítható, a kérdés egyedi megoldási levezetését továbbra is érdemes megadni. A program nem távolít el kérdéseket csak azért, mert az egyedi tananyagmező hiányzik: a témaköri magyarázatot használja, ha van; az újonnan hozzáadott, még nem párosított kérdés a saját általános témakörében továbbra is részt vehet a gyakorlásban. A Tanulási segédben a témakörök külön megnyithatók, a hozzájuk kapcsolt feladatokból közvetlenül lehet gyakorolni.
