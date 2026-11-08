@@ -13,7 +13,7 @@ function task(base,question,value,unit,formula,alternatives,scenario){
  }
  if(opts.length!==4)throw Error("Could not form four options: "+base.id);
  const shuffled=[...opts].sort(()=>Math.random()-.5);
- return {...base,q:question,opts:shuffled,a:shuffled.indexOf(answer),why:formula,scenario:scenario||(/\\d/.test(base.scenario||"")?"Villanyszerelőként megbízást kapsz egy berendezés vagy áramkör műszaki felmérésére. A megadott adatokból számítod ki a szükséges villamos mennyiséget.":base.scenario)};
+ return {...base,q:question,opts:shuffled,a:shuffled.indexOf(answer),why:formula,worked:"",scenario:scenario||(/\d/.test(base.scenario||"")?"Villanyszerelőként megbízást kapsz egy berendezés vagy áramkör műszaki felmérésére. A megadott adatokból számítod ki a szükséges villamos mennyiséget.":base.scenario)};
 }
 const f={
 n1:b=>{const u=pick([24,48,120,230]),i=pick([2,3,4,5,8]);const r=u/i;return task(b,"Egy "+fmt(u)+" V feszültségre kapcsolt, "+fmt(r)+" Ω ellenállású fogyasztón mekkora áram folyik?",i,"A","I = U/R = "+fmt(u)+"/"+fmt(r)+" = "+fmt(i)+" A.",[i*2,i/2,i+2]);},
