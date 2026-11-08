@@ -88,7 +88,15 @@ function vary(base){
   candidate=f[base.id](base);key=candidate.q;
   if(!previous.includes(key))break;
  }
- if(previous.includes(key))return {...base};
+ // Kis variánskészletnél sem térünk vissza a régi, fix számsorra:
+ // előbb 8 korábbi változatot kerüljük, ha ez nem lehetséges, legalább a közvetlen előzőt.
+ if(previous.includes(key)){
+  for(let i=0;i<150;i++){
+   candidate=f[base.id](base);key=candidate.q;
+   if(key!==previous[0])break;
+  }
+ }
+ if(key===previous[0])return {...base};
  save(base.id,key);
  return candidate;
 }
