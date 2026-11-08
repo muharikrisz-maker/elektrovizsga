@@ -52,6 +52,7 @@ header:after{content:"";position:absolute;left:0;right:0;top:0;height:7px;backgr
 <script src="questions-oktav.js"></script>
 <script src="teaching-materials.js"></script>
 <script src="topic-catalog.js"></script>
+<script src="exam-framework.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="auth-config.js"></script>
 <script src="auth.js"></script>
@@ -72,10 +73,10 @@ const BANK=[
 ];
 BANK.push(...EXTRA_BANK,...PRACTICAL_BANK,...OKTAV_BANK);
 const topicByQuestion=new Map();
-for(const t of TOPIC_CATALOG)for(const id of t.questionIds)topicByQuestion.set(id,t.id);
-function learningTopicOf(q){return TOPIC_CATALOG.find(t=>t.id===q.learningTopic)||null}
+for(const t of EXAM_FRAMEWORK.topics)for(const id of t.questionIds)topicByQuestion.set(id,t.id);
+function learningTopicOf(q){return EXAM_FRAMEWORK.topics.find(t=>t.id===q.learningTopic)||null}
 for(const q of BANK){
- const m=TEACHING_MATERIALS[q.id],t=TOPIC_CATALOG.find(x=>x.id===topicByQuestion.get(q.id));
+ const m=TEACHING_MATERIALS[q.id],t=EXAM_FRAMEWORK.topics.find(x=>x.id===topicByQuestion.get(q.id));
  q.learningTopic=t?.id||q.topic;
  if(m)Object.assign(q,m);
  q.intro||=t?.intro||"Gondold végig a feladatban szereplő mennyiségek kapcsolatát.";
@@ -153,10 +154,16 @@ function launchStudy(mode,level=0,topic="Összes témakör"){
  if(!picked.length){alert("Nincs kérdés ezen a szinten és témakörben.");return}
  study={mode,level,topic,questions:picked,cursor:0,answers:{},optionOrders:{},reviewed:false};state.mode="study";renderStudy()
 }
+function topicQuestionCount(id){return BANK.filter(q=>q.learningTopic===id).length}
 function studyHome(){
  stopTimer();state.mode="study-home";
- const cards=TOPIC_CATALOG.map(t=>{const n=BANK.filter(q=>q.learningTopic===t.id).length;return '<div class="study-card"><h2>'+escaped(t.title)+'</h2><p class="muted small">'+n+' feladat · '+escaped(t.group)+'</p><p class="muted">'+escaped(t.intro)+'</p><button class="button secondary" data-topic-lesson="'+escaped(t.id)+'">Tananyag és feladatok</button></div>'}).join("");
- app.innerHTML='<section class="panel"><span class="pill">Tanulási segéd</span><h1>Válassz témakört!</h1><p class="muted">Minden témakörhöz saját tananyag, szemléltető példa és hozzá kapcsolt kérdések tartoznak. Ezután választhatsz nehézségi szintet is.</p><div class="study-cards">'+cards+'</div><h2>Gyakorlás nehézségi szint alapján</h2><label for="studyTopic">Témakör</label><select id="studyTopic"><option value="Összes témakör">Összes témakör</option>'+TOPIC_CATALOG.map(t=>'<option value="'+escaped(t.id)+'">'+escaped(t.title)+'</option>').join('')+'</select><div class="study-cards">'+STUDY_LEVELS.map((l,i)=>'<div class="study-card"><span class="pill">'+(i+1)+'. szint</span><h2>'+escaped(l.name)+'</h2><p class="muted">'+escaped(l.description)+'</p><button class="button secondary" data-study-level="'+i+'">Gyakorlás</button></div>').join('')+'</div><div class="actions"><button class="button secondary" id="studyPath">Fokozatos tanulási út</button><button class="button secondary" id="openTeacher">AI-tanárom</button><button class="button secondary" id="studyBack">Vissza</button></div></section>';
+ const categories=EXAM_FRAMEWORK.exam.interactive.sections.map(section=>{
+  const topics=EXAM_FRAMEWORK.topics.filter(t=>t.section===section.id);
+  const ready=topics.filter(t=>topicQuestionCount(t.id)>0).length;
+  return '<div class="lesson-example"><h2>'+escaped(section.title)+' · '+section.weight+'%</h2><p class="muted">'+escaped(section.description)+'</p><p class="muted small">'+ready+'/'+topics.length+' altémakörben vannak feladatok. Ez nem tanulási készültségi százalék.</p><div class="study-cards">'+topics.map(t=>{const n=topicQuestionCount(t.id);return '<div class="study-card"><h3>'+escaped(t.title)+'</h3><p class="muted small">'+(n?n+' hozzárendelt feladat':'Kidolgozásra vár')+'</p><p class="muted">'+escaped(t.intro)+'</p><button class="button secondary" data-topic-lesson="'+escaped(t.id)+'">Témakör megnyitása</button></div>'}).join('')+'</div></div>'
+ }).join('');
+ const practical=EXAM_FRAMEWORK.exam.project.parts.map(p=>'<div class="study-card"><h3>'+escaped(p.title)+'</h3><p class="muted">'+escaped(p.description)+'</p><p class="muted small">Felkészítő modul kidolgozásra vár</p></div>').join('');
+ app.innerHTML='<section class="panel"><span class="pill">KKK 2024.08.29. · v4</span><h1>Tanulás a vizsgakövetelmények alapján</h1><p class="muted">Három hivatalos vizsgaterület, részletes témakörök, hozzájuk rendelt tananyagok és feladatok.</p><h2>Interaktív vizsga · 45 perc · 20% vizsgasúly</h2>'+categories+'<h2>Projektfeladat · 345 perc · 80% vizsgasúly</h2><p class="muted">A gyakorlati vizsgára külön kell készülni. Az alábbi területek felkészülési tervként szerepelnek.</p><div class="study-cards">'+practical+'</div><h2>Szintenkénti gyakorlás</h2><label for="studyTopic">Tanulási témakör</label><select id="studyTopic"><option value="Összes témakör">Összes témakör</option>'+EXAM_FRAMEWORK.topics.filter(t=>topicQuestionCount(t.id)>0).map(t=>'<option value="'+escaped(t.id)+'">'+escaped(t.title)+'</option>').join('')+'</select><div class="study-cards">'+STUDY_LEVELS.map((l,i)=>'<div class="study-card"><h3>'+escaped(l.name)+'</h3><p class="muted">'+escaped(l.description)+'</p><button class="button secondary" data-study-level="'+i+'">Gyakorlás</button></div>').join('')+'</div><div class="actions"><button class="button secondary" id="studyPath">Fokozatos tanulási út</button><button class="button secondary" id="openTeacher">AI-tanárom</button><button class="button secondary" id="studyBack">Vissza</button></div></section>';
  document.querySelectorAll("[data-topic-lesson]").forEach(b=>b.onclick=()=>showLearningTopic(b.dataset.topicLesson));
  document.querySelectorAll("[data-study-level]").forEach(b=>b.onclick=()=>launchStudy("level",Number(b.dataset.studyLevel),document.getElementById("studyTopic").value));
  document.getElementById("openTeacher").onclick=showAiTeacher;
@@ -164,16 +171,16 @@ function studyHome(){
  document.getElementById("studyBack").onclick=home;
 }
 function showLearningTopic(id){
- const t=TOPIC_CATALOG.find(x=>x.id===id);if(!t)return studyHome();
+ const t=EXAM_FRAMEWORK.topics.find(x=>x.id===id);if(!t)return studyHome();
  stopTimer();state.mode="learning-topic";
- const qs=BANK.filter(q=>q.learningTopic===id);
- app.innerHTML='<section class="panel"><span class="pill">'+escaped(t.group)+'</span><h1>'+escaped(t.title)+'</h1><h2>Tananyag</h2><p>'+escaped(t.intro)+'</p><div class="lesson-example"><strong>Másik kidolgozott példa</strong><p>'+escaped(t.example)+'</p></div><h2>Kapcsolódó feladatok ('+qs.length+')</h2>'+qs.map(q=>'<div class="answer"><strong>'+escaped(q.q)+'</strong></div>').join('')+'<div class="actions"><button class="button" id="topicPractice">Gyakorlás ebből a témakörből</button><button class="button secondary" id="topicBack">Vissza a témakörökhöz</button></div></section>';
- document.getElementById("topicPractice").onclick=()=>launchTopicPractice(id);
+ const questions=BANK.filter(q=>q.learningTopic===id);
+ const section=EXAM_FRAMEWORK.exam.interactive.sections.find(x=>x.id===t.section);
+ app.innerHTML='<section class="panel"><span class="pill">'+escaped(section?.title||t.group)+'</span><h1>'+escaped(t.title)+'</h1><h2>Tananyag</h2><p>'+escaped(t.intro)+'</p>'+(t.example?'<div class="lesson-example"><strong>Kidolgozott példa</strong><p>'+escaped(t.example)+'</p></div>':'<p class="muted">A részletes tananyag és a kidolgozott példák még készülnek.</p>')+'<h2>Kapcsolódó feladatok ('+questions.length+')</h2>'+(questions.length?questions.map(q=>'<div class="answer"><strong>'+escaped(q.q)+'</strong></div>').join(''):'<p class="muted">Ehhez a témakörhöz még nincsenek feladatok.</p>')+'<div class="actions">'+(questions.length?'<button class="button" id="topicPractice">Gyakorlás ebből a témakörből</button>':'')+'<button class="button secondary" id="topicBack">Vissza a témakörökhöz</button></div></section>';
+ const practice=document.getElementById("topicPractice");if(practice)practice.onclick=()=>launchTopicPractice(id);
  document.getElementById("topicBack").onclick=studyHome;
 }
 function launchTopicPractice(id){
- const picked=shuffled(BANK.filter(q=>q.learningTopic===id)).slice(0,10);
- if(!picked.length)return studyHome();
+ const picked=shuffled(BANK.filter(q=>q.learningTopic===id)).slice(0,10);if(!picked.length)return studyHome();
  study={mode:"topic",level:0,topic:id,questions:picked,cursor:0,answers:{},optionOrders:{},reviewed:false};
  state.mode="study";renderStudy();
 }
@@ -319,7 +326,7 @@ function finishStudy(){
  const percent=Math.round(100*score/selected.length);
  const recomm=missed.length?missed.reduce((m,q)=>{const k=q.learningTopic;m[k]=(m[k]||0)+1;return m},{}):{};
  const sorted=Object.entries(recomm).sort((a,b)=>b[1]-a[1]);
- app.innerHTML='<section class="panel"><span class="pill">Tanulási kör lezárva</span><h1>'+score+' / '+selected.length+' jó válasz · '+percent+'%</h1><p class="muted">'+(percent>=80?'Szép eredmény! Megpróbálhatsz egy nehezebb szintet.':'Érdemes ismételni azokat a témákat, ahol hibáztál. A magyarázatokból már láthatod, mire kell figyelni.')+'</p>'+(missed.length?'<h2>Amit érdemes újra megnézned</h2>'+sorted.map(([k,n])=>'<p><strong>'+escaped(TOPIC_CATALOG.find(t=>t.id===k)?.title||k)+'</strong> · '+n+' hibás válasz</p>').join(''):'<h2>Minden kérdés sikerült!</h2>')+'<p id="studySaveStatus" class="muted small">'+(window.ElektroAuth?.getUser()?'Mentés folyamatban…':'Vendégként ezt a gyakorlást nem mentjük el.')+'</p><div class="actions"><button class="button" id="studyRetry">Új gyakorlás</button><button class="button secondary" id="studyHome">Szintválasztás</button>'+(study.mode==="level"&&study.level<2&&percent>=80?'<button class="button secondary" id="studyAdvance">Következő szint</button>':'')+'</div></section>';
+ app.innerHTML='<section class="panel"><span class="pill">Tanulási kör lezárva</span><h1>'+score+' / '+selected.length+' jó válasz · '+percent+'%</h1><p class="muted">'+(percent>=80?'Szép eredmény! Megpróbálhatsz egy nehezebb szintet.':'Érdemes ismételni azokat a témákat, ahol hibáztál. A magyarázatokból már láthatod, mire kell figyelni.')+'</p>'+(missed.length?'<h2>Amit érdemes újra megnézned</h2>'+sorted.map(([k,n])=>'<p><strong>'+escaped(EXAM_FRAMEWORK.topics.find(t=>t.id===k)?.title||k)+'</strong> · '+n+' hibás válasz</p>').join(''):'<h2>Minden kérdés sikerült!</h2>')+'<p id="studySaveStatus" class="muted small">'+(window.ElektroAuth?.getUser()?'Mentés folyamatban…':'Vendégként ezt a gyakorlást nem mentjük el.')+'</p><div class="actions"><button class="button" id="studyRetry">Új gyakorlás</button><button class="button secondary" id="studyHome">Szintválasztás</button>'+(study.mode==="level"&&study.level<2&&percent>=80?'<button class="button secondary" id="studyAdvance">Következő szint</button>':'')+'</div></section>';
  document.getElementById("studyRetry").onclick=()=>study.mode==="topic"?launchTopicPractice(study.topic):launchStudy(study.mode,study.level,study.topic);
  document.getElementById("studyHome").onclick=studyHome;
  const advance=document.getElementById("studyAdvance");if(advance)advance.onclick=()=>launchStudy("level",study.level+1,study.topic);
