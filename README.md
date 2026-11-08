@@ -54,3 +54,7 @@ A `topic-catalog.js` témakörönként tartalmazza az azonosítót, címet, tana
 ## Életszerű helyzetek minden gyakorlókérdés előtt
 
 A `teaching-materials.js` minden kérdéséhez `scenario` mező tartozik. Ez egy pályakezdő villanyszerelő vállalkozó szemszögéből megfogalmazott, valósághű ügyfélmegbízás vagy szervizhelyzet; **nem** a fogalmi definíció, és a megoldást nem árulhatja el. A tanulási nézet a feladat előtt ezt mutatja. Válaszadás után jelenik meg a `why` megoldás, az `intro` fogalmi háttér, a `real` szakmai következmény és a `worked` másik példa. Új kérdés párosításakor lehetőleg mind az öt elemet add meg, a `scenario`-t is. A feladatok ne tűnjenek el hiányzó mező miatt.
+
+## Számadatok változtatása
+
+A `question-variations.js` 56 számítási feladattípushoz generál módosított számadatokat, összetartozó kérdéssel, négy válaszlehetőséggel, helyesválasz-indexszel és levezetéssel. A próbavizsgához és a különböző tanulási módokhoz minden gyakorlási kör elején új feladatváltozatok készülnek; a kiinduló BANK változatlan marad. A böngésző `localStorage` tárolja az egyes feladattípusok utóbbi változatait, hogy lehetőleg ne ismétlődjenek, és az előző változatot mindenképpen kerülje. A fogalmi, szabványos értékeket kérdező feladatok nem kapnak önkényes számmódosítást. A vizsgakiértékelés a generált kérdés pillanatképéből történik.
