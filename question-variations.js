@@ -2,7 +2,7 @@
 (function(global){
 "use strict";
 const pick=a=>a[Math.floor(Math.random()*a.length)];
-const fmt=(n,d=2)=>new Intl.NumberFormat("hu-HU",{maximumFractionDigits:d}).format(n);
+const fmt=(n,d=2)=>new Intl.NumberFormat("hu-HU",{maximumFractionDigits:Math.max(d,Math.abs(n)>0&&Math.abs(n)<.01?6:Math.abs(n)>0&&Math.abs(n)<.1?4:2)}).format(n);
 const num=(n,d=2)=>Number(n.toFixed(d));
 function task(base,question,value,unit,formula,alternatives,scenario){
  const answer=fmt(value)+(unit?" "+unit:"");
