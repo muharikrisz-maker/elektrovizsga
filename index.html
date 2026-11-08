@@ -51,6 +51,7 @@ header:after{content:"";position:absolute;left:0;right:0;top:0;height:7px;backgr
 <script src="questions-practical.js"></script>
 <script src="questions-oktav.js"></script>
 <script src="teaching-materials.js"></script>
+<script src="topic-catalog.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="auth-config.js"></script>
 <script src="auth.js"></script>
@@ -70,17 +71,19 @@ const BANK=[
 {id:"b4",topic:"Villamos biztonságtechnika",q:"Melyik eszköz alkalmas önmagában túláram elleni védelemre megfelelő méretezés esetén?",opts:["ÁVK túláramvédelem nélkül","Kismegszakító","Egyszerű kapcsoló","Jelzőlámpa"],a:1,why:"A kismegszakító túlterhelés és zárlati túláram ellen is véd; a szokásos ÁVK önmagában nem túláramvédelmi eszköz."}
 ];
 BANK.push(...EXTRA_BANK,...PRACTICAL_BANK,...OKTAV_BANK);
-const REQUIRED_LEARNING_FIELDS=["intro","hint","why","worked","real"];
-const incompleteQuestions=[];
-for(let i=BANK.length-1;i>=0;i--){
- const q=BANK[i], material=TEACHING_MATERIALS[q.id];
- if(material)Object.assign(q,material);
- if(!material||REQUIRED_LEARNING_FIELDS.some(field=>typeof q[field]!=="string"||q[field].trim().length<20)){
-   incompleteQuestions.push(q.id);BANK.splice(i,1);
- }
+const topicByQuestion=new Map();
+for(const t of TOPIC_CATALOG)for(const id of t.questionIds)topicByQuestion.set(id,t.id);
+function learningTopicOf(q){return TOPIC_CATALOG.find(t=>t.id===q.learningTopic)||null}
+for(const q of BANK){
+ const m=TEACHING_MATERIALS[q.id],t=TOPIC_CATALOG.find(x=>x.id===topicByQuestion.get(q.id));
+ q.learningTopic=t?.id||q.topic;
+ if(m)Object.assign(q,m);
+ q.intro||=t?.intro||"Gondold végig a feladatban szereplő mennyiségek kapcsolatát.";
+ q.hint||="Először azonosítsd az ismert adatokat és a keresett mennyiséget.";
+ q.worked||=t?.example||"A témakör további feladataival gyakorolhatod az összefüggést.";
+ q.real||=t?.intro||"A tananyagban szereplő összefüggések a gyakorlati méréseknél is hasznosak.";
+ q.why||=t?.intro||"A témakörben tanult összefüggést alkalmazzuk.";
 }
-if(incompleteQuestions.length)console.error("Hiányzó tananyag miatt kihagyott kérdések:",incompleteQuestions);
-
 const app=document.getElementById("app");
 let state={mode:"home",order:[],cursor:0,answers:{},skipped:[],second:false,deadline:0,timer:null,topic:"Összes témakör"};
 const escaped=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -143,7 +146,7 @@ const STUDY_LEVELS=[
  {name:"Haladó",description:"Többlépéses számítások és vizsgafeladatok",ids:["fz01","fz03","fz05","fz06","fz07","os03","os04","os08","os12","os16","os17","p08","p09","p10","p12","o14","o19","o21","o22","o23","o24"]}
 ];
 let study=null;
-function studyPool(level,topic){return shuffled(BANK.filter(q=>STUDY_LEVELS[level].ids.includes(q.id)&&(topic==="Összes témakör"||topic===q.topic)))}
+function studyPool(level,topic){return shuffled(BANK.filter(q=>STUDY_LEVELS[level].ids.includes(q.id)&&(topic==="Összes témakör"||topic===q.topic||topic===q.learningTopic)))}
 function launchStudy(mode,level=0,topic="Összes témakör"){
  stopTimer();
  let picked=mode==="path"?[0,1,2].flatMap(i=>studyPool(i,topic).slice(0,5)):studyPool(level,topic).slice(0,10);
@@ -152,14 +155,28 @@ function launchStudy(mode,level=0,topic="Összes témakör"){
 }
 function studyHome(){
  stopTimer();state.mode="study-home";
- const topics=[...new Set(BANK.map(q=>q.topic))];
- app.innerHTML='<section class="panel"><span class="pill">Tanulási segéd</span><h1>Tanulj a saját tempódban</h1><p class="muted">A gyakorlás nem időre megy: minden válasz után részletes magyarázatot és életszerű példát kapsz. A vizsgamód továbbra is külön, 20 kérdéssel és 45 perccel működik.</p><label for="studyTopic">Témakör</label><select id="studyTopic"><option>Összes témakör</option>'+topics.map(t=>'<option>'+escaped(t)+'</option>').join('')+'</select><div class="study-cards">'+STUDY_LEVELS.map((l,i)=>'<div class="study-card"><span class="pill">'+(i+1)+'. szint</span><h2>'+escaped(l.name)+'</h2><p class="muted">'+escaped(l.description)+'</p><button class="button secondary" data-study-level="'+i+'">Gyakorlás ezen a szinten</button></div>').join('')+'</div><div class="lesson-example"><h2>Személyes AI-tanár · Ohm-törvény</h2><p>Magánóra a korábbi eredményeid alapján: szabadon kérdezhetsz, az AI lépésről lépésre magyaráz és önálló megoldásra ösztönöz.</p><button class="button" id="openTeacher">AI-tanárom megnyitása</button></div><div class="lesson-example"><h2>Fokozatos tanulási út</h2><p>Az első 5 kérdés kezdő, a következő 5 középhaladó, az utolsó 5 pedig haladó. Így egyre nehezebb feladatok várnak rád.</p><button class="button" id="studyPath">Kezdem a fokozatos tanulást</button></div><div class="actions"><button class="button secondary" id="studyBack">Vissza a kezdőlapra</button></div></section>';
+ const cards=TOPIC_CATALOG.map(t=>{const n=BANK.filter(q=>q.learningTopic===t.id).length;return '<div class="study-card"><h2>'+escaped(t.title)+'</h2><p class="muted small">'+n+' feladat · '+escaped(t.group)+'</p><p class="muted">'+escaped(t.intro)+'</p><button class="button secondary" data-topic-lesson="'+escaped(t.id)+'">Tananyag és feladatok</button></div>'}).join("");
+ app.innerHTML='<section class="panel"><span class="pill">Tanulási segéd</span><h1>Válassz témakört!</h1><p class="muted">Minden témakörhöz saját tananyag, szemléltető példa és hozzá kapcsolt kérdések tartoznak. Ezután választhatsz nehézségi szintet is.</p><div class="study-cards">'+cards+'</div><h2>Gyakorlás nehézségi szint alapján</h2><label for="studyTopic">Témakör</label><select id="studyTopic"><option value="Összes témakör">Összes témakör</option>'+TOPIC_CATALOG.map(t=>'<option value="'+escaped(t.id)+'">'+escaped(t.title)+'</option>').join('')+'</select><div class="study-cards">'+STUDY_LEVELS.map((l,i)=>'<div class="study-card"><span class="pill">'+(i+1)+'. szint</span><h2>'+escaped(l.name)+'</h2><p class="muted">'+escaped(l.description)+'</p><button class="button secondary" data-study-level="'+i+'">Gyakorlás</button></div>').join('')+'</div><div class="actions"><button class="button secondary" id="studyPath">Fokozatos tanulási út</button><button class="button secondary" id="openTeacher">AI-tanárom</button><button class="button secondary" id="studyBack">Vissza</button></div></section>';
+ document.querySelectorAll("[data-topic-lesson]").forEach(b=>b.onclick=()=>showLearningTopic(b.dataset.topicLesson));
  document.querySelectorAll("[data-study-level]").forEach(b=>b.onclick=()=>launchStudy("level",Number(b.dataset.studyLevel),document.getElementById("studyTopic").value));
  document.getElementById("openTeacher").onclick=showAiTeacher;
  document.getElementById("studyPath").onclick=()=>launchStudy("path",0,document.getElementById("studyTopic").value);
  document.getElementById("studyBack").onclick=home;
 }
-
+function showLearningTopic(id){
+ const t=TOPIC_CATALOG.find(x=>x.id===id);if(!t)return studyHome();
+ stopTimer();state.mode="learning-topic";
+ const qs=BANK.filter(q=>q.learningTopic===id);
+ app.innerHTML='<section class="panel"><span class="pill">'+escaped(t.group)+'</span><h1>'+escaped(t.title)+'</h1><h2>Tananyag</h2><p>'+escaped(t.intro)+'</p><div class="lesson-example"><strong>Másik kidolgozott példa</strong><p>'+escaped(t.example)+'</p></div><h2>Kapcsolódó feladatok ('+qs.length+')</h2>'+qs.map(q=>'<div class="answer"><strong>'+escaped(q.q)+'</strong></div>').join('')+'<div class="actions"><button class="button" id="topicPractice">Gyakorlás ebből a témakörből</button><button class="button secondary" id="topicBack">Vissza a témakörökhöz</button></div></section>';
+ document.getElementById("topicPractice").onclick=()=>launchTopicPractice(id);
+ document.getElementById("topicBack").onclick=studyHome;
+}
+function launchTopicPractice(id){
+ const picked=shuffled(BANK.filter(q=>q.learningTopic===id)).slice(0,10);
+ if(!picked.length)return studyHome();
+ study={mode:"topic",level:0,topic:id,questions:picked,cursor:0,answers:{},optionOrders:{},reviewed:false};
+ state.mode="study";renderStudy();
+}
 async function showAiTeacher(){
  stopTimer();
  state.mode="ai-teacher";
@@ -300,10 +317,10 @@ function finishStudy(){
  const score=selected.filter(q=>study.answers[q.id]===q.a).length;
  const missed=selected.filter(q=>study.answers[q.id]!==q.a);
  const percent=Math.round(100*score/selected.length);
- const recomm=missed.length?missed.reduce((m,q)=>{const k=lessonKey(q);m[k]=(m[k]||0)+1;return m},{}):{};
+ const recomm=missed.length?missed.reduce((m,q)=>{const k=q.learningTopic;m[k]=(m[k]||0)+1;return m},{}):{};
  const sorted=Object.entries(recomm).sort((a,b)=>b[1]-a[1]);
- app.innerHTML='<section class="panel"><span class="pill">Tanulási kör lezárva</span><h1>'+score+' / '+selected.length+' jó válasz · '+percent+'%</h1><p class="muted">'+(percent>=80?'Szép eredmény! Megpróbálhatsz egy nehezebb szintet.':'Érdemes ismételni azokat a témákat, ahol hibáztál. A magyarázatokból már láthatod, mire kell figyelni.')+'</p>'+(missed.length?'<h2>Amit érdemes újra megnézned</h2>'+sorted.map(([k,n])=>'<p><strong>'+escaped(lessons[k].title)+'</strong> · '+n+' hibás válasz</p>').join(''):'<h2>Minden kérdés sikerült!</h2>')+'<p id="studySaveStatus" class="muted small">'+(window.ElektroAuth?.getUser()?'Mentés folyamatban…':'Vendégként ezt a gyakorlást nem mentjük el.')+'</p><div class="actions"><button class="button" id="studyRetry">Új gyakorlás</button><button class="button secondary" id="studyHome">Szintválasztás</button>'+(study.mode==="level"&&study.level<2&&percent>=80?'<button class="button secondary" id="studyAdvance">Következő szint</button>':'')+'</div></section>';
- document.getElementById("studyRetry").onclick=()=>launchStudy(study.mode,study.level,study.topic);
+ app.innerHTML='<section class="panel"><span class="pill">Tanulási kör lezárva</span><h1>'+score+' / '+selected.length+' jó válasz · '+percent+'%</h1><p class="muted">'+(percent>=80?'Szép eredmény! Megpróbálhatsz egy nehezebb szintet.':'Érdemes ismételni azokat a témákat, ahol hibáztál. A magyarázatokból már láthatod, mire kell figyelni.')+'</p>'+(missed.length?'<h2>Amit érdemes újra megnézned</h2>'+sorted.map(([k,n])=>'<p><strong>'+escaped(TOPIC_CATALOG.find(t=>t.id===k)?.title||k)+'</strong> · '+n+' hibás válasz</p>').join(''):'<h2>Minden kérdés sikerült!</h2>')+'<p id="studySaveStatus" class="muted small">'+(window.ElektroAuth?.getUser()?'Mentés folyamatban…':'Vendégként ezt a gyakorlást nem mentjük el.')+'</p><div class="actions"><button class="button" id="studyRetry">Új gyakorlás</button><button class="button secondary" id="studyHome">Szintválasztás</button>'+(study.mode==="level"&&study.level<2&&percent>=80?'<button class="button secondary" id="studyAdvance">Következő szint</button>':'')+'</div></section>';
+ document.getElementById("studyRetry").onclick=()=>study.mode==="topic"?launchTopicPractice(study.topic):launchStudy(study.mode,study.level,study.topic);
  document.getElementById("studyHome").onclick=studyHome;
  const advance=document.getElementById("studyAdvance");if(advance)advance.onclick=()=>launchStudy("level",study.level+1,study.topic);
  if(window.ElektroAuth?.getUser())window.ElektroAuth.saveAttempt({score,total:selected.length,topic:"Tanulás: "+(study.mode==="path"?"Fokozatos":STUDY_LEVELS[study.level].name)+" / "+study.topic,answers:{...study.answers}}).then(()=>{const el=document.getElementById("studySaveStatus");if(el)el.textContent="A tanulási kör mentve a fiókodba."}).catch(e=>{const el=document.getElementById("studySaveStatus");if(el)el.textContent="Mentési hiba: "+e.message});
@@ -410,9 +427,12 @@ real:"Ha egy gép fémvázára hiba miatt veszélyes érintési feszültség ker
 image:null,credit:null,link:null}
 };
 function lessonKey(q){if(q.id==="os18"||/3G2,5|zöld.sárga védővezető eret/i.test(q.q))return "cableMarking";if(q.id==="os13"||/forgásirányát háromfázisú táplálás/i.test(q.q))return "rotation";if(q.id==="g3"||(/fűtőtest/i.test(q.q)&&/mennyi energiát|óra alatt/i.test(q.q)))return "energy";if(q.id==="g1"||/transzformátor alapvető működési elve/i.test(q.q))return "transformer";if(["os02","b2","os06"].includes(q.id)||/ÁVK|áram.védőkapcsoló/i.test(q.q))return "rcd";if(q.id==="n1"||/230 V.*46 Ω|Ohm.törvény alapján.*U.*R/i.test(q.q))return "ohm";if(q.id==="n3"||/Két 100 Ω.os ellenállást párhuzamosan/i.test(q.q))return "parallel";if(q.id.startsWith("fz")||/zárlat|rövidzárási|lökőáram|impedanciáj/i.test(q.q))return "short";if(q.topic.includes("gépek"))return "machine";if(q.topic.includes("biztonság"))return "safety";return "network"}
-function renderLesson(q){const l=lessons[lessonKey(q)];return '<section class="panel"><span class="pill">Tanítócsomag · '+escaped(q.topic)+'</span><h1>'+escaped(l.title)+'</h1><p>'+escaped(l.intro)+'</p>'+(l.image?'<figure class="lesson-photo"><img src="'+l.image+'" loading="lazy" alt="Villamos berendezés fotója a tananyaghoz" referrerpolicy="no-referrer"><figcaption>'+escaped(l.credit)+' · <a href="'+l.link+'" target="_blank" rel="noopener noreferrer">Forrás és licenc</a></figcaption></figure>':'<div class="lesson-diagram" role="img" aria-label="Egyszerűsített háromfázisú vezetőábra"><span>L1 ──────────────────</span><span>L2 ──────────────────</span><span>L3 ──────────────────</span><span>N  ──────────────────</span><small>Elvi szemléltetés, nem szerelési utasítás</small></div>')+'<h2>Így gondold végig</h2><ol class="lesson-steps">'+l.steps.map(x=>'<li>'+escaped(x)+'</li>').join('')+'</ol><h2>Kidolgozott példa</h2><div class="lesson-example">'+escaped(l.worked)+'</div><h2>Hol találkozol vele a valóságban?</h2><div class="lesson-card">'+escaped(l.real)+'</div><h2>Próbáld újra!</h2><p class="muted">Most olyan kérdéseket kapsz, amelyek ehhez a témához kapcsolódnak. Előbb gondold végig a megoldást, és csak utána nézd meg a magyarázatot.</p><div class="actions"><button class="button" id="practiceLesson">5 kérdés gyakorlása</button><button class="button secondary" id="backResults">Vissza az értékeléshez</button></div></section>'}
-function showLesson(qid){const q=BANK.find(item=>item.id===qid);if(!q)return;stopTimer();state.mode="lesson";app.innerHTML=renderLesson(q);document.getElementById("practiceLesson").onclick=()=>startReview(lessonKey(q));document.getElementById("backResults").onclick=()=>finish(true)}
-function startReview(key){const questions=shuffled(BANK.filter(q=>lessonKey(q)===key)).slice(0,5);stopTimer();state={mode:"exam",order:questions.map(q=>q.id),selectedIds:questions.map(q=>q.id),cursor:0,answers:{},skipped:[],second:false,deadline:Date.now()+45*60*1000,timer:null,topic:questions[0]?.topic||"Összes témakör"};state.timer=setInterval(tick,1000);render()}
+function renderLesson(q){
+ const t=learningTopicOf(q);
+ return '<section class="panel"><span class="pill">Kapcsolódó témakör</span><h1>'+escaped(t?.title||q.topic)+'</h1><p>'+escaped(t?.intro||q.intro)+'</p><h2>Az adott kérdés</h2><p>'+escaped(q.q)+'</p><p>'+escaped(q.why)+'</p><div class="lesson-example"><h2>Másik kidolgozott példa</h2><p>'+escaped(q.worked||t?.example||"")+'</p></div><p>'+escaped(q.real||"")+'</p><div class="actions"><button class="button" id="practiceLesson">Kapcsolódó feladatok</button><button class="button secondary" id="backResults">Vissza az értékeléshez</button></div></section>';
+}
+function showLesson(qid){const q=BANK.find(item=>item.id===qid);if(!q)return;stopTimer();state.mode="lesson";app.innerHTML=renderLesson(q);document.getElementById("practiceLesson").onclick=()=>startReview(q.learningTopic);document.getElementById("backResults").onclick=()=>finish(true)}
+function startReview(key){const questions=shuffled(BANK.filter(q=>q.learningTopic===key)).slice(0,5);stopTimer();state={mode:"exam",order:questions.map(q=>q.id),selectedIds:questions.map(q=>q.id),cursor:0,answers:{},skipped:[],second:false,deadline:Date.now()+45*60*1000,timer:null,topic:questions[0]?.topic||"Összes témakör"};state.timer=setInterval(tick,1000);render()}
 
 function finish(fromLesson=false){stopTimer();state.mode="results";const selected=state.selectedIds.map(id=>BANK.find(q=>q.id===id));const score=selected.reduce((sum,q)=>sum+(state.answers[q.id]===q.a?1:0),0);const user=window.ElektroAuth?.getUser();if(user&&!fromLesson)window.ElektroAuth.saveAttempt({score,total:selected.length,topic:state.topic,answers:{...state.answers}}).then(()=>{const el=document.getElementById('saveStatus');if(el)el.textContent='Az eredmény elmentve a tanulói fiókodba.'}).catch(e=>{const el=document.getElementById('saveStatus');if(el)el.textContent='Nem sikerült menteni az eredményt: '+e.message});const groups=[...new Set(selected.map(q=>q.topic))];app.innerHTML='<section class="panel"><span class="pill">Próba lezárva</span><h1>'+score+' / '+selected.length+' pont</h1><p class="muted">'+Math.round(score/selected.length*100)+'% helyes válasz. A meg nem válaszolt kérdések hibásnak számítanak. '+(user?'<span id="saveStatus">Eredmény mentése…</span>':'Vendégként nem mentjük el az eredményt.')+'</p><h2>Témakörönként</h2>'+groups.map(t=>{let qs=selected.filter(q=>q.topic===t);let good=qs.filter(q=>state.answers[q.id]===q.a).length;return '<p>'+escaped(t)+': <strong>'+good+'/'+qs.length+'</strong></p>'}).join('')+'<div class="actions"><button class="button" id="again">Új gyakorlás</button></div></section><section class="panel"><h2>Megoldások és magyarázatok</h2>'+selected.map((q,i)=>'<div class="answer"><p><strong>'+(i+1)+'. '+escaped(q.q)+'</strong></p><p class="muted small">'+escaped(q.source||"Alapozó mintafeladat")+'</p><p class="'+(state.answers[q.id]===q.a?"good":"bad")+'">Válaszod: '+(state.answers[q.id]===undefined?"kimaradt":displayedLetter(q,state.answers[q.id],state.optionOrders))+' · Helyes: '+displayedLetter(q,q.a,state.optionOrders)+'</p><p><mark>'+escaped(q.opts[q.a])+'</mark></p><p class="muted">'+escaped(q.why)+'</p>'+(state.answers[q.id]===q.a?'':'<button class="button secondary lesson-link" data-lesson="'+escaped(q.id)+'">Tanítócsomag megnyitása</button>')+'</div>').join('')+'</section>';document.getElementById("again").onclick=home;document.querySelectorAll('[data-lesson]').forEach(b=>b.onclick=()=>showLesson(b.dataset.lesson))}
 window.ElektroAuth?.init();window.ElektroAuth?.onChange(()=>{if(state.mode==='home'||state.mode==='login')home()});home();
