@@ -23,7 +23,7 @@ p{line-height:1.65}
 .button:disabled{opacity:.4;cursor:not-allowed}
 .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
 .option{width:100%;text-align:left;display:flex;gap:15px;align-items:center;padding:15px;margin:10px 0;border:1px solid #e0e4df;background:#fff;color:#252825;border-radius:13px;font-size:1rem;cursor:pointer;transition:border-color .14s ease,background .14s ease}
-.option:hover{border-color:#a6aaa5;background:#fafbf9}
+@media (hover:hover) and (pointer:fine){.option:hover:not(:disabled){border-color:#a6aaa5;background:#fafbf9}}
 .option strong{background:#f1f3f0;color:#3c433d;padding:9px 12px;border-radius:9px;min-width:38px;text-align:center}
 .option.selected{border-color:#c7a531;background:#fff9e7}
 .option.selected strong{background:#f6dc77;color:#29241b}
