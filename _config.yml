@@ -1,0 +1,7 @@
+exclude:
+  - rag/source-docs
+  - rag/extracted
+  - rag/index
+  - rag/scripts
+  - rag/tests
+  - supabase
