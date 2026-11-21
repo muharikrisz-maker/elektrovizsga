@@ -1,0 +1,6 @@
+{
+  "embedding_model": "text-embedding-3-small",
+  "documents": 0,
+  "chunks": 0,
+  "missing_sources": ["Oktav_feladatok.pdf"]
+}

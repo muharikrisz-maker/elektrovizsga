@@ -1,0 +1,5 @@
+project_id = "elektrovizsga"
+
+[functions.rag]
+# The handler verifies the user's token with Supabase Auth on every POST.
+verify_jwt = false

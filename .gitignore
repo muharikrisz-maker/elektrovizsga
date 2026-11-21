@@ -1,0 +1,8 @@
+/rag/source-docs/*
+/rag/extracted/
+/rag/index/*
+!/rag/index/status.json
+__pycache__/
+.env
+.env.*
+/supabase/.temp/
